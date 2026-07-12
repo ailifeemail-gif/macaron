@@ -1,0 +1,2954 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Название сайта</title>
+</head>
+<body>
+
+  <!-- Блок 1 -->
+  <div id="dmhRoot" class="dmh-root">
+  <header class="dmh-header" id="dmhHeader">
+    <div class="dmh-inner">
+
+      <a class="dmh-logo" id="dmhLogoLink" href="#">
+        <img class="dmh-logo-img" id="dmhLogoImg" src="" alt="" />
+        <span class="dmh-logo-text" id="dmhLogoText"></span>
+      </a>
+
+      <nav class="dmh-nav" id="dmhNav"></nav>
+
+      <div class="dmh-right">
+        <a class="dmh-btn" id="dmhBtn" target="_blank" rel="noopener"></a>
+        <button class="dmh-burger" id="dmhBurger" aria-label="Меню" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+  <div class="dmh-spacer" id="dmhSpacer" aria-hidden="true"></div>
+
+  <div class="dmh-overlay" id="dmhOverlay">
+    <nav class="dmh-overlay-nav" id="dmhOverlayNav"></nav>
+    <a class="dmh-overlay-btn" id="dmhOverlayBtn" target="_blank" rel="noopener"></a>
+  </div>
+</div>
+
+<style>
+  html{ scroll-behavior:smooth; scroll-padding-top:100px; } /* ДОДАНО: плавний скрол + відступ, щоб фіксована шапка не закривала заголовок розділу при переході по якорю */
+
+  #dmhRoot{
+    --dmh-bg:#f8efe6ee;
+    --dmh-text:#332420;
+    --dmh-text-muted:#7a675f;
+    --dmh-accent:#a4506c;
+    --dmh-btn-bg:#332420;
+    --dmh-btn-text:#fbf3ec;
+    --dmh-overlay-bg:#f8efe6;
+    --dmh-border:rgba(51,36,32,.08);
+
+    position:relative;
+    width:100%;
+    font-family:'Montserrat', Arial, sans-serif;
+    box-sizing:border-box;
+  }
+  #dmhRoot *{ box-sizing:border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+  .dmh-header{
+    position:fixed;              /* ЗМІНЕНО: fixed замість sticky -- гарантовано завжди видимий, незалежно від інших блоків на сторінці */
+    top:0;
+    left:0;
+    right:0;
+    z-index:500;
+    width:100%;
+    background: var(--dmh-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--dmh-border);
+    transition: box-shadow .3s ease, padding .3s ease;
+  }
+  .dmh-header.dmh-scrolled{
+    box-shadow: 0 8px 24px rgba(51,36,32,.08);
+  }
+  .dmh-spacer{
+    width:100%;                  /* ДОДАНО: займає стільки ж місця, скільки шапка -- щоб контент під нею не ховався */
+  }
+
+  .dmh-inner{
+    max-width:1280px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    padding: 16px clamp(20px,5vw,50px);
+  }
+
+  .dmh-logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none !important;
+    flex:0 0 auto;
+  }
+  .dmh-logo-img{
+    display:block;
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    border-radius:50%;
+  }
+  .dmh-logo-text{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:20px;
+    color: var(--dmh-text) !important;
+    letter-spacing:-.2px;
+    white-space:nowrap;
+  }
+
+  .dmh-nav{
+    display:flex;
+    align-items:center;
+    gap: clamp(18px,2.6vw,36px);
+    flex:1 1 auto;
+    justify-content:center;
+  }
+  .dmh-nav a{
+    text-decoration:none !important;
+    color: var(--dmh-text-muted) !important;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:.2px;
+    white-space:nowrap;
+    position:relative;
+    padding:4px 0;
+    transition: color .25s ease;
+  }
+  .dmh-nav a::after{
+    content:"";
+    position:absolute;
+    left:0; right:100%;
+    bottom:-2px;
+    height:2px;
+    background: var(--dmh-accent);
+    transition: right .3s ease;
+  }
+  .dmh-nav a:hover{ color: var(--dmh-text) !important; }
+  .dmh-nav a:hover::after{ right:0; }
+
+  .dmh-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex:0 0 auto;
+  }
+
+  .dmh-btn{
+    display:inline-flex;
+    align-items:center;
+    padding:11px 24px;
+    border-radius:40px;
+    background: var(--dmh-btn-bg);
+    color: var(--dmh-btn-text) !important;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.2px;
+    text-decoration:none !important;
+    box-shadow: 0 10px 20px rgba(51,36,32,.18);
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+    white-space:nowrap;
+  }
+  .dmh-btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 26px rgba(51,36,32,.26); }
+
+  .dmh-burger{
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:5px;
+    width:42px;
+    height:42px;
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    padding:0;
+    flex:0 0 auto;
+  }
+  .dmh-burger span{
+    display:block;
+    width:22px;
+    height:2px;
+    background: var(--dmh-text);
+    border-radius:2px;
+    transition: transform .3s ease, opacity .3s ease;
+  }
+  .dmh-burger[aria-expanded="true"] span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .dmh-burger[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+  .dmh-burger[aria-expanded="true"] span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  /* ======================================================
+     МОБІЛЬНЕ МЕНЮ (overlay)
+     ====================================================== */
+  .dmh-overlay{
+    position:fixed;
+    inset:0;
+    z-index:490;
+    background: var(--dmh-overlay-bg);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:34px;
+    opacity:0;
+    visibility:hidden;
+    transform: translateY(-8px);
+    transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;
+  }
+  .dmh-overlay.dmh-open{
+    opacity:1;
+    visibility:visible;
+    transform: translateY(0);
+    transition: opacity .35s ease, transform .35s ease, visibility 0s;
+  }
+  .dmh-overlay-nav{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+  }
+  .dmh-overlay-nav a{
+    text-decoration:none !important;
+    color: var(--dmh-text) !important;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:28px;
+  }
+  .dmh-overlay-btn{
+    display:inline-flex;
+    align-items:center;
+    padding:16px 34px;
+    border-radius:40px;
+    background: var(--dmh-btn-bg);
+    color: var(--dmh-btn-text) !important;
+    font-size:14px;
+    font-weight:600;
+    text-decoration:none !important;
+    box-shadow: 0 14px 26px rgba(51,36,32,.2);
+  }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ПЛАНШЕТ / ТЕЛЕФОН
+     ====================================================== */
+  @media (max-width: 900px){
+    .dmh-nav{ display:none; }
+    .dmh-burger{ display:flex; }
+    .dmh-btn{ display:none; }             /* кнопка переїжджає у мобільне меню, щоб в шапці не було тісно */
+  }
+  @media (max-width: 480px){
+    .dmh-inner{ padding: 13px 16px; }
+    .dmh-logo-img{ width:36px; height:36px; }
+    .dmh-logo-text{ font-size:17px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dmh-overlay, .dmh-burger span, .dmh-btn{ transition:none !important; }
+  }
+</style>
+
+<script>
+(function(){
+
+  /* ======================================================
+     CONFIG -- ЛОГОТИП, МЕНЮ, КНОПКА, КОЛЬОРИ ТУТ
+     ====================================================== */
+  var CONFIG = {
+
+    colors: {
+      headerBg     : "#f8efe6cc", /* ЗМІНИТИ фон шапки (останні 2 символи -- прозорість: ff=100% непрозорий, cc=80%, 99=60%, 66=40%) */
+      text         : "#332420",   /* ЗМІНИТИ основний колір тексту (лого, посилання при наведенні) */
+      textMuted    : "#7a675f",   /* ЗМІНИТИ колір пунктів меню */
+      accent       : "#a4506c",   /* ЗМІНИТИ колір підкреслення при наведенні на пункт меню */
+      btnBg        : "#332420",   /* ЗМІНИТИ фон кнопки */
+      btnText      : "#fbf3ec",   /* ЗМІНИТИ колір тексту кнопки */
+      overlayBg    : "#f8efe6"    /* ЗМІНИТИ фон мобільного меню (без прозорості) */
+    },
+
+    logo: {
+      imageUrl : "https://i.ibb.co/zHNn56Ph/Screenshot-2026-07-11-112651.png", /* ЗМІНИТИ -- посилання на логотип (або лиши "" щоб показати тільки текст) */
+      alt      : "Dr. Macaron",
+      text     : "Dr. Macaron",   /* ЗМІНИТИ текст лого поруч з іконкою (можна лишити "" якщо треба тільки картинка) */
+      url      : "#dmHero"        /* ЗМІНИТИ -- куди веде клік по лого (якір або посилання на головну) */
+    },
+
+    nav: [
+      /* ЗМІНИТИ пункти меню: text -- назва, url -- якір розділу (#id-блоку) або зовнішнє посилання */
+      { text: "Ціни",     url: "#dmpSection" },
+      { text: "Наші роботи", url: "#dmgSection" },
+      { text: "Відгуки",  url: "#dmrRew" },
+      { text: "Контакти",  url: "#dmfFooter" }
+    ],
+
+    button: {
+      text : "Замовити",   /* ЗМІНИТИ текст кнопки */
+      url  : "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp" /* ЗМІНИТИ посилання кнопки */
+    }
+  };
+
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+
+
+  var root = document.getElementById('dmhRoot');
+  if(!root) return;
+
+  var c = CONFIG.colors;
+  root.style.setProperty('--dmh-bg', c.headerBg);
+  root.style.setProperty('--dmh-text', c.text);
+  root.style.setProperty('--dmh-text-muted', c.textMuted);
+  root.style.setProperty('--dmh-accent', c.accent);
+  root.style.setProperty('--dmh-btn-bg', c.btnBg);
+  root.style.setProperty('--dmh-btn-text', c.btnText);
+  root.style.setProperty('--dmh-overlay-bg', c.overlayBg);
+
+  var logo = CONFIG.logo;
+  var logoImg = document.getElementById('dmhLogoImg');
+  if(logo.imageUrl){
+    logoImg.src = logo.imageUrl;
+    logoImg.alt = logo.alt || '';
+  } else {
+    logoImg.style.display = 'none';
+  }
+  document.getElementById('dmhLogoText').textContent = logo.text || '';
+  document.getElementById('dmhLogoLink').setAttribute('href', logo.url || '#');
+
+  function buildNav(container, isOverlay){
+    CONFIG.nav.forEach(function(item){
+      var a = document.createElement('a');
+      a.textContent = item.text;
+      a.setAttribute('href', item.url);
+      if(isOverlay){
+        a.addEventListener('click', closeMenu);
+      }
+      container.appendChild(a);
+    });
+  }
+  buildNav(document.getElementById('dmhNav'), false);
+  buildNav(document.getElementById('dmhOverlayNav'), true);
+
+  var btn = document.getElementById('dmhBtn');
+  btn.textContent = CONFIG.button.text;
+  btn.setAttribute('href', CONFIG.button.url);
+
+  var overlayBtn = document.getElementById('dmhOverlayBtn');
+  overlayBtn.textContent = CONFIG.button.text;
+  overlayBtn.setAttribute('href', CONFIG.button.url);
+
+  var header = document.getElementById('dmhHeader');
+  var burger = document.getElementById('dmhBurger');
+  var overlay = document.getElementById('dmhOverlay');
+  var spacer = document.getElementById('dmhSpacer');
+
+  function syncSpacerHeight(){
+    spacer.style.height = header.offsetHeight + 'px';
+  }
+  syncSpacerHeight();
+  window.addEventListener('resize', syncSpacerHeight);
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(syncSpacerHeight); /* висота шапки могла змінитись після довантаження шрифту Fraunces */
+  }
+
+  function openMenu(){
+    overlay.classList.add('dmh-open');
+    burger.setAttribute('aria-expanded', 'true');
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu(){
+    overlay.classList.remove('dmh-open');
+    burger.setAttribute('aria-expanded', 'false');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
+  burger.addEventListener('click', function(){
+    if(overlay.classList.contains('dmh-open')){ closeMenu(); } else { openMenu(); }
+  });
+  overlayBtn.addEventListener('click', closeMenu);
+
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 8){ header.classList.add('dmh-scrolled'); }
+    else{ header.classList.remove('dmh-scrolled'); }
+  }, { passive:true });
+
+})();
+</script>
+
+
+
+  <!-- Блок 2 -->
+<div id="dmRoot" class="dm-root">
+ <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Bakery",
+  "name": "Dr. Macaron",
+  "image": "https://i.ibb.co/zHNn56Ph/Screenshot-2026-07-11-112651.png",
+  "url": "https://y.tilda.ws/",
+  "telephone": "+380980000000",
+  "priceRange": "260-1040 UAH",
+  "servesCuisine": "Macarons",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "мікрорайон Варшавський",
+    "addressLocality": "Київ",
+    "addressRegion": "Київська область",
+    "addressCountry": "UA"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Київ"
+  },
+  "sameAs": [
+    "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp"
+  ]
+}
+</script>
+  <!-- ІНТРО-АНІМАЦІЯ: збірка макарона + логотип -->
+  <div class="dm-intro" id="dmIntro">
+    <div class="dm-macaron-stage" id="dmMacaronStage">
+      <div class="dm-shell dm-shell-top" id="dmShellTop"></div>
+      <div class="dm-cream" id="dmCream"></div>
+      <div class="dm-shell dm-shell-bottom" id="dmShellBottom"></div>
+    </div>
+    <div class="dm-logo-reveal" id="dmLogoReveal">
+      <a id="dmLogoLink" class="dm-logo-link" href="#" target="_blank" rel="noopener">
+        <img id="dmLogoImg" class="dm-logo-img" src="" alt="Dr. Macaron" />
+      </a>
+    </div>
+  </div>
+ 
+  <!-- ОСНОВНИЙ HERO-ЕКРАН -->
+  <section class="dm-hero" id="dmHero">
+    <div class="dm-grain" aria-hidden="true"></div>
+    <div class="dm-blob dm-blob-1" aria-hidden="true"></div>
+    <div class="dm-blob dm-blob-2" aria-hidden="true"></div>
+ 
+    <div class="dm-hero-inner">
+ 
+      <div class="dm-hero-headline">
+        <span class="dm-badge" id="dmBadge">
+          <svg class="dm-badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L13.6 9.2L21 12L13.6 14.8L12 22L10.4 14.8L3 12L10.4 9.2L12 2Z" fill="currentColor"/>
+          </svg>
+          <span id="dmBadgeText"></span>
+        </span>
+ 
+        <h1 class="dm-title" id="dmTitle"></h1>
+      </div>
+ 
+      <div class="dm-hero-image" id="dmHeroImageWrap">
+        <div class="dm-hero-image-shape" aria-hidden="true"></div>
+        <div class="dm-hero-image-frame">
+          <img id="dmHeroImg" src="" alt="" />
+        </div>
+      </div>
+ 
+      <div class="dm-hero-cta">
+        <p class="dm-subtitle" id="dmSubtitle"></p>
+ 
+        <div class="dm-actions">
+          <a class="dm-btn dm-btn-primary" id="dmBtnPrimary" target="_blank" ></a>
+          <a class="dm-btn dm-btn-secondary" id="dmBtnSecondary" target="_blank" rel="noopener">
+           <svg class="dm-ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+</svg>
+            <span id="dmBtnSecondaryText"></span>
+          </a>
+        </div>
+      </div>
+ 
+    </div>
+ 
+    <!-- Хвиля з "крему" внизу hero -->
+    <div class="dm-wave-wrap" aria-hidden="true">
+      <div class="dm-wave-hairline"></div>
+      <svg class="dm-wave dm-wave-back" viewBox="0 0 2400 150" preserveAspectRatio="none">
+        <path d="M0,70 C300,140 600,0 1200,70 C1500,140 1800,0 2400,70 L2400,150 L0,150 Z"></path>
+      </svg>
+      <svg class="dm-wave dm-wave-front" viewBox="0 0 2400 150" preserveAspectRatio="none">
+        <path d="M0,90 C300,30 600,120 1200,90 C1500,30 1800,120 2400,90 L2400,150 L0,150 Z"></path>
+      </svg>
+    </div>
+  </section>
+</div>
+ 
+<style>
+  #dmRoot{
+    --dm-bg1:#f8efe6;
+    --dm-bg2:#f0dfe0;
+    --dm-shell:#e4a4b9;
+    --dm-shell-dark:#c97e97;
+    --dm-cream:#fffaf3;
+    --dm-primary:#a4506c;
+    --dm-accent:#9c7a4e;
+    --dm-text-dark:#332420;
+    --dm-text-light:#7a675f;
+    --dm-btn-bg:#332420;
+    --dm-btn-text:#fbf3ec;
+    --dm-btn-border:#332420;
+    --dm-wave1:#f2ddd0;
+    --dm-wave2:#e8c8c9;
+    --dm-badge-text:#9c7a4e;
+ 
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    font-family: 'Montserrat', Arial, sans-serif;
+    box-sizing:border-box;
+  }
+  #dmRoot *{ box-sizing:border-box; }
+ 
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;500;600&display=swap');
+ 
+  /* ======================================================
+     ІНТРО-АНІМАЦІЯ
+     ====================================================== */
+  .dm-intro{
+    position:fixed;              /* ЗМІНЕНО: fixed замість absolute -- тепер завжди по центру ЕКРАНА, а не блоку на сторінці */
+    inset:0;
+    z-index:9999;                /* ЗМІНЕНО: підняли z-index, щоб перекривало решту контенту сторінки Tilda */
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background: radial-gradient(circle at 50% 40%, var(--dm-bg1), var(--dm-bg2));
+    transition: opacity .6s ease;
+  }
+  .dm-intro.dm-fade-out{ opacity:0; pointer-events:none; }
+  .dm-intro.dm-hidden{ display:none; }
+ 
+  .dm-macaron-stage{
+    position:relative;
+    width:clamp(150px,22vw,240px);
+    height:clamp(160px,22vw,250px);
+    flex:0 0 auto;
+  }
+ 
+  .dm-shell{
+    position:absolute;
+    left:0;
+    width:100%;
+    height:52%;
+    background:
+      radial-gradient(circle at 25% 30%, rgba(0,0,0,.16) 0 2px, transparent 2.5px) 10% 20%/22px 22px,
+      radial-gradient(circle at 60% 60%, rgba(0,0,0,.14) 0 1.6px, transparent 2px) 55% 55%/26px 26px,
+      radial-gradient(circle at 80% 20%, rgba(0,0,0,.13) 0 1.6px, transparent 2px) 80% 30%/24px 24px,
+      radial-gradient(ellipse at 35% 15%, rgba(255,255,255,.55), transparent 55%),
+      linear-gradient(180deg, var(--dm-shell), var(--dm-shell-dark));
+    opacity:0;
+    box-shadow: 0 14px 26px rgba(51,36,32,.16);
+  }
+  .dm-shell-top{
+    top:0;
+    border-radius: 50% 50% 6% 6% / 100% 100% 18% 18%;
+    animation-name: dmShellTopIn;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+  }
+  .dm-shell-top::after{
+    content:"";
+    position:absolute;
+    left:6%;
+    right:6%;
+    bottom:-5px;
+    height:12px;
+    background: repeating-radial-gradient(circle at 0 0, var(--dm-shell-dark) 0 3px, transparent 3px 15px);
+    opacity:.55;
+  }
+  .dm-shell-bottom{
+    bottom:0;
+    border-radius: 6% 6% 50% 50% / 18% 18% 100% 100%;
+    animation-name: dmShellBottomIn;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+  }
+  .dm-shell-bottom::before{
+    content:"";
+    position:absolute;
+    left:6%;
+    right:6%;
+    top:-5px;
+    height:12px;
+    background: repeating-radial-gradient(circle at 0 0, var(--dm-shell-dark) 0 3px, transparent 3px 15px);
+    opacity:.55;
+  }
+ 
+  .dm-cream{
+    position:absolute;
+    left:9%;
+    right:9%;
+    top:50%;
+    height:clamp(30px,5.5vw,46px);
+    margin-top:calc(clamp(30px,5.5vw,46px) / -2);
+    background: linear-gradient(160deg, #ffffff 0%, var(--dm-cream) 35%, var(--dm-cream) 70%, rgba(255,255,255,.4) 100%);
+    border-radius: 45%;
+    box-shadow: inset 0 2px 3px rgba(255,255,255,.9), inset 0 -4px 8px rgba(51,36,32,.07);
+    opacity:0;
+    clip-path: inset(100% 0 0 0);
+    transform: scaleX(.7);
+    transform-origin:center;
+    animation-name: dmCreamIn;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+  }
+ 
+  @keyframes dmShellTopIn{
+    0%   { opacity:0; transform: translateY(-90px) rotate(-6deg); }
+    14%  { opacity:1; transform: translateY(-72px) rotate(-3deg); }
+    40%  { opacity:1; transform: translateY(-72px) rotate(-3deg); }
+    58%  { opacity:1; transform: translateY(-8px)  rotate(0deg); }
+    66%  { opacity:1; transform: translateY(3px)   rotate(1deg); }
+    74%  { opacity:1; transform: translateY(0)      rotate(0deg); }
+    88%  { opacity:1; transform: translateY(0) scale(.92); }
+    100% { opacity:0; transform: translateY(0) scale(.72); }
+  }
+  @keyframes dmShellBottomIn{
+    0%   { opacity:0; transform: translateY(90px) rotate(6deg); }
+    14%  { opacity:1; transform: translateY(72px) rotate(3deg); }
+    40%  { opacity:1; transform: translateY(72px) rotate(3deg); }
+    58%  { opacity:1; transform: translateY(8px)   rotate(0deg); }
+    66%  { opacity:1; transform: translateY(-3px)  rotate(-1deg); }
+    74%  { opacity:1; transform: translateY(0)      rotate(0deg); }
+    88%  { opacity:1; transform: translateY(0) scale(.92); }
+    100% { opacity:0; transform: translateY(0) scale(.72); }
+  }
+  /* Крем спочатку "наливається" знизу вгору (clip-path), а в момент
+     з'єднання половинок трохи вичавлюється по боках -- як справжній крем */
+  @keyframes dmCreamIn{
+    0%   { opacity:0; clip-path: inset(100% 0 0 0); transform: scaleX(.7); }
+    40%  { opacity:0; clip-path: inset(100% 0 0 0); transform: scaleX(.7); }
+    44%  { opacity:1; clip-path: inset(100% 0 0 0); transform: scaleX(.72); }
+    56%  { opacity:1; clip-path: inset(0% 0 0 0); transform: scaleX(.86); }
+    64%  { transform: scaleX(1) scaleY(1); }
+    69%  { transform: scaleX(1.2) scaleY(.9); }
+    75%  { transform: scaleX(1.06) scaleY(1); }
+    80%  { transform: scaleX(1) scaleY(1); }
+    88%  { opacity:1; transform: scale(.9); }
+    100% { opacity:0; transform: scale(.72); }
+  }
+ 
+  .dm-logo-reveal{
+    position:absolute;
+    inset:0;                                  /* ЗМІНЕНО: розтягуємо на весь .dm-intro */
+    display:flex;                             /* ЗМІНЕНО: центруємо flex-ом замість "порожнього" absolute */
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    animation-name: dmLogoIn;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+  }
+  .dm-logo-link{
+    display:block;
+    line-height:0;
+    cursor:pointer;
+  }
+  .dm-logo-img{
+    display:block;
+    width:clamp(110px,15vw,180px);
+    height:clamp(110px,15vw,180px);
+    object-fit:contain;
+    border-radius:50%;
+    box-shadow: 0 18px 34px rgba(51,36,32,.22);
+    transition: transform .3s ease;
+  }
+  .dm-logo-link:hover .dm-logo-img{
+    transform: scale(1.05);
+  }
+  @keyframes dmLogoIn{
+    0%   { opacity:0; transform: translateY(10px) scale(.85); }
+    76%  { opacity:0; transform: translateY(10px) scale(.85); }
+    88%  { opacity:1; transform: translateY(0) scale(1.06); }
+    100% { opacity:1; transform: scale(1); }
+  }
+ 
+  /* ======================================================
+     HERO
+     ====================================================== */
+  .dm-hero{
+    position:relative;
+    width:100%;
+    min-height:clamp(560px,90vh,880px);
+    background: linear-gradient(160deg, var(--dm-bg1) 0%, var(--dm-bg2) 100%);
+    display:flex;
+    align-items:center;
+    padding: clamp(90px,10vw,60px) clamp(20px,6vw,80px) clamp(130px,14vw,170px);
+    opacity:0;
+    transform: translateY(18px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .dm-hero.dm-visible{ opacity:1; transform: translateY(0); }
+ 
+  .dm-grain{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    opacity:.05;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .dm-blob{ position:absolute; z-index:0; border-radius:50%; filter: blur(70px); pointer-events:none; }
+  .dm-blob-1{ width:clamp(220px,30vw,420px); height:clamp(220px,30vw,420px); top:-8%; right:-6%; background: var(--dm-shell); opacity:.28; }
+  .dm-blob-2{ width:clamp(180px,24vw,340px); height:clamp(180px,24vw,340px); bottom:6%; left:-8%; background: var(--dm-accent); opacity:.16; }
+ 
+  .dm-hero-inner{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:1180px;
+    margin:0 auto;
+    display:grid;                                  /* ЗМІНЕНО: grid замість flex -- дає точний контроль над рядками */
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "headline image"
+      "cta      image";
+    align-items:center;
+    column-gap: clamp(30px,5vw,60px);
+    row-gap: 14px;
+  }
+ 
+  .dm-hero-headline{ grid-area: headline; }
+  .dm-hero-cta{ grid-area: cta; max-width:560px; }
+  .dm-hero-image{ grid-area: image; align-self:center; }
+ 
+  .dm-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: rgba(255,255,255,.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,.7);
+    color: var(--dm-badge-text);
+    padding:9px 18px;
+    border-radius:30px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+    font-weight:600;
+    margin-bottom:24px;
+    box-shadow: 0 6px 16px rgba(51,36,32,.06);
+  }
+  .dm-badge-icon{ width:13px; height:13px; color: var(--dm-badge-text); flex:0 0 auto; }
+ 
+  .dm-title{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(30px,5.2vw,58px);
+    line-height:1.12;
+    letter-spacing:-.5px;
+    color: var(--dm-text-dark);
+    margin:0 0 22px;
+  }
+  .dm-title em{ font-style:italic; font-weight:600; color: var(--dm-primary); }
+ 
+  .dm-subtitle{
+    font-size:clamp(14px,1.6vw,18px);
+    line-height:1.65;
+    color: var(--dm-text-light);
+    margin:0 0 32px;
+    max-width:470px;
+  }
+ 
+  .dm-actions{ display:flex; flex-wrap:wrap; gap:14px; }
+ 
+  .dm-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:16px 30px;
+    border-radius:40px;
+    font-size:14px;
+    letter-spacing:.3px;
+    font-weight:600;
+    text-decoration:none !important;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, background .3s ease;
+    border:1.5px solid transparent;
+  }
+  .dm-btn:hover{ transform: translateY(-3px); }
+  .dm-btn-primary{
+    background: var(--dm-btn-bg);
+    color: var(--dm-btn-text) !important;
+    box-shadow: 0 14px 28px rgba(51,36,32,.24);
+  }
+  .dm-btn-primary:hover{ box-shadow: 0 18px 34px rgba(51,36,32,.32); }
+  .dm-btn-secondary{
+    background:transparent;
+    border-color: var(--dm-btn-border);
+    color: var(--dm-btn-border) !important;
+  }
+  .dm-btn-secondary:hover{ background: var(--dm-btn-border); color: var(--dm-btn-text) !important; }
+  .dm-ig-icon{ width:17px; height:17px; }
+ 
+  .dm-hero-image{
+    position:relative;
+    width: min(100%, 380px);
+    max-width:460px;
+    aspect-ratio: 1 / 1;      /* ДОДАНО: фіксує квадратну область, щоб пляма не "розтягувалась" в яйце, поки фото ще не завантажилось */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .dm-hero-image-shape{
+    position:absolute;
+    inset: 14% 5%;            /* ЗМІНЕНО: замість width/height 88% -- асиметричні відступи роблять пляму пласкішою (ширшою і нижчою) */
+    border-radius: 55% 45% 50% 50% / 60% 60% 40% 40%; /* ЗМІНЕНО: менші вертикальні радіуси -- форма стала більш плоскою, менш "яйцеподібною" */
+    background: linear-gradient(150deg, var(--dm-shell), var(--dm-accent));
+    opacity:.22;
+    z-index:0;
+    transform: rotate(-4deg);
+  }
+  .dm-hero-image-frame{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:420px;
+    border-radius: 42% 58% 63% 37% / 48% 42% 58% 52%;
+    overflow:hidden;
+    box-shadow: 0 34px 60px rgba(51,36,32,.24);
+    animation: dmFloat 5.5s ease-in-out infinite;
+    transition: border-radius .6s ease;
+  }
+  .dm-hero-image-frame:hover{ border-radius: 38% 62% 55% 45% / 55% 45% 63% 37%; }
+  .dm-hero-image-frame img{ display:block; width:100%; height:100%; object-fit:cover; }
+  @keyframes dmFloat{
+    0%,100%{ transform: translateY(0) rotate(0deg); }
+    50%{ transform: translateY(-16px) rotate(.6deg); }
+  }
+ 
+  .dm-wave-wrap{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-2px;
+    height: clamp(80px,12vw,150px);
+    z-index:1;
+    overflow:hidden;
+    line-height:0;
+  }
+  .dm-wave-hairline{
+    position:absolute;
+    top:6px;
+    left:0;
+    right:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--dm-accent), transparent);
+    opacity:.4;
+    z-index:2;
+  }
+  .dm-wave{ position:absolute; bottom:0; left:0; width:200%; height:100%; }
+  .dm-wave path{ fill: var(--dm-wave1); }
+  .dm-wave-front path{ fill: var(--dm-wave2); }
+  .dm-wave-back{ animation: dmWaveMove 16s linear infinite; opacity:.9; }
+  .dm-wave-front{ animation: dmWaveMove 10s linear infinite reverse; }
+  @keyframes dmWaveMove{ from{ transform: translateX(0); } to{ transform: translateX(-1200px); } }
+ 
+  /* ======================================================
+     АДАПТИВНІСТЬ: ПЛАНШЕТ (600px -- 900px)
+     ====================================================== */
+  @media (max-width: 900px){
+    .dm-hero{
+      padding: clamp(70px,9vw,100px) clamp(20px,5vw,40px) 90px;
+      min-height: auto;
+    }
+    .dm-hero-inner{
+      grid-template-columns: 1fr 200px;
+      row-gap: 20px;
+    }
+    .dm-hero-cta{ max-width:none; }
+    .dm-badge{ margin-bottom:16px; }
+  }
+ 
+  /* ======================================================
+     АДАПТИВНІСТЬ: ТЕЛЕФОН (до 480px)
+     ====================================================== */
+  @media (max-width: 480px){
+    .dm-hero{
+      min-height: 100svh;               /* ЗМІНЕНО: секція заповнює весь перший екран -- під нею більше не видно білого фону сторінки */
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding: 90px 16px 60px;
+    }
+    .dm-hero-inner{
+      grid-template-columns: 1fr 130px;   /* ЗМІНЕНО: фото лишається компактним і завжди справа зверху */
+      grid-template-areas:
+        "headline image"
+        "cta      cta";                    /* ЗМІНЕНО: текст+кнопки тепер займають весь рядок під фото */
+      column-gap: 14px;
+      row-gap: 22px;
+    }
+    .dm-badge{ font-size:10px; padding:6px 11px; margin-bottom:10px; gap:5px; }
+    .dm-hero-headline{ align-self:start; margin-top:-58px; }  /* ЗМІНЕНО: підняли ще трохи вище */
+    .dm-title{ font-size: 30px; margin-bottom:0; line-height:1.16; }
+    .dm-subtitle{ font-size:14px; margin-bottom:22px; }  /* ЗМІНЕНО: підзаголовок повернуто, більше не ховається */
+    .dm-actions{ flex-direction:column; gap:10px; width:100%; }
+    .dm-btn{ width:100%; justify-content:center; padding:14px 20px; font-size:13px; }
+    .dm-hero-image-shape{ inset: 10% 4%; }
+  }
+ 
+  @media (prefers-reduced-motion: reduce){
+    .dm-hero-image-frame, .dm-wave-back, .dm-wave-front{ animation:none !important; }
+  }
+</style>
+ 
+<script>
+(function(){
+ 
+  /* ======================================================
+     CONFIG -- ВСІ ТЕКСТИ, КОЛЬОРИ, ФОТО ТА ПОСИЛАННЯ ТУТ
+     ====================================================== */
+  var CONFIG = {
+ 
+    colors: {
+      bgGradientStart : "#f8efe6",
+      bgGradientEnd   : "#f0dfe0",
+ 
+      shellColor      : "#e4a4b9",
+      shellColorDark  : "#c97e97",
+      creamColor      : "#fffaf3",
+ 
+      primaryColor    : "#a4506c",
+      accentColor     : "#9c7a4e",
+ 
+      textDark        : "#332420",
+      textLight       : "#7a675f",
+ 
+      buttonBg        : "#332420",
+      buttonText      : "#fbf3ec",
+      buttonBorder    : "#332420",
+ 
+      waveColor1      : "#f2ddd0",
+      waveColor2      : "#e8c8c9",
+ 
+      badgeText       : "#9c7a4e"
+    },
+ 
+    texts: {
+      badgeText       : "Смак дня — Полуниця & Мак",
+      titleHtml       : "Макарони ручної роботи<br>з <em>душею</em>",
+      subtitle        : "Ніжні мигдальні тістечка з авторськими начинками. Готуємо невеликими партіями щодня — свіжо, красиво, смачно.",
+      buttonPrimaryText   : "Замовити в Instagram",
+      buttonSecondaryText : "Зателефонуй"
+    },
+ 
+    links: {
+      buttonPrimaryUrl   : "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp",
+      buttonSecondaryUrl : "tel:+380980000000",
+      logoUrl             : "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp"
+    },
+ 
+    image: {
+      heroImageUrl : "https://i.ibb.co/ZzwYgk0n/22222.png",
+      heroImageAlt : "Макарон полуниця та мак",
+      logoImageUrl : "https://i.ibb.co/zHNn56Ph/Screenshot-2026-07-11-112651.png",
+      logoImageAlt : "Dr. Macaron Patisserie"
+    },
+ 
+    timing: {
+      introDurationMs : 2900,
+      holdAfterLogoMs : 500,
+      playOnce        : true
+    }
+  };
+ 
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+ 
+ 
+  var root = document.getElementById('dmRoot');
+  if(!root) return;
+ 
+  var c = CONFIG.colors;
+  root.style.setProperty('--dm-bg1', c.bgGradientStart);
+  root.style.setProperty('--dm-bg2', c.bgGradientEnd);
+  root.style.setProperty('--dm-shell', c.shellColor);
+  root.style.setProperty('--dm-shell-dark', c.shellColorDark);
+  root.style.setProperty('--dm-cream', c.creamColor);
+  root.style.setProperty('--dm-primary', c.primaryColor);
+  root.style.setProperty('--dm-accent', c.accentColor);
+  root.style.setProperty('--dm-text-dark', c.textDark);
+  root.style.setProperty('--dm-text-light', c.textLight);
+  root.style.setProperty('--dm-btn-bg', c.buttonBg);
+  root.style.setProperty('--dm-btn-text', c.buttonText);
+  root.style.setProperty('--dm-btn-border', c.buttonBorder);
+  root.style.setProperty('--dm-wave1', c.waveColor1);
+  root.style.setProperty('--dm-wave2', c.waveColor2);
+  root.style.setProperty('--dm-badge-text', c.badgeText);
+ 
+  var t = CONFIG.texts;
+  document.getElementById('dmBadgeText').textContent = t.badgeText;
+  document.getElementById('dmTitle').innerHTML = t.titleHtml;
+  document.getElementById('dmSubtitle').textContent = t.subtitle;
+ 
+  var logoImg = document.getElementById('dmLogoImg');
+  logoImg.src = CONFIG.image.logoImageUrl;
+  logoImg.alt = CONFIG.image.logoImageAlt;
+  document.getElementById('dmLogoLink').setAttribute('href', CONFIG.links.logoUrl);
+ 
+  var btnPrimary = document.getElementById('dmBtnPrimary');
+  btnPrimary.textContent = t.buttonPrimaryText;
+  btnPrimary.setAttribute('href', CONFIG.links.buttonPrimaryUrl);
+ 
+  var btnSecondaryText = document.getElementById('dmBtnSecondaryText');
+  btnSecondaryText.textContent = t.buttonSecondaryText;
+  document.getElementById('dmBtnSecondary').setAttribute('href', CONFIG.links.buttonSecondaryUrl);
+ 
+  var img = document.getElementById('dmHeroImg');
+  if(CONFIG.image.heroImageUrl){
+    img.src = CONFIG.image.heroImageUrl;
+    img.alt = CONFIG.image.heroImageAlt;
+  } else {
+    document.getElementById('dmHeroImageWrap').style.display = 'none';
+  }
+ 
+  var intro = document.getElementById('dmIntro');
+  var hero  = document.getElementById('dmHero');
+  var shellTop = document.getElementById('dmShellTop');
+  var shellBottom = document.getElementById('dmShellBottom');
+  var cream = document.getElementById('dmCream');
+  var logo = document.getElementById('dmLogoReveal');
+ 
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var alreadyPlayed = false;
+  try{
+    alreadyPlayed = CONFIG.timing.playOnce && sessionStorage.getItem('dmIntroPlayed') === '1';
+  }catch(e){ alreadyPlayed = false; }
+
+  var prevOverflow = ''; /* ДОДАНО: щоб заблокувати скрол на час інтро-анімації */
+
+  function lockScroll(){
+    prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  }
+  function unlockScroll(){
+    document.documentElement.style.overflow = prevOverflow;
+    document.body.style.overflow = '';
+  }
+ 
+  function revealHero(){
+    intro.classList.add('dm-fade-out');
+    hero.classList.add('dm-visible');
+    unlockScroll(); /* ДОДАНО */
+    setTimeout(function(){ intro.classList.add('dm-hidden'); }, 650);
+  }
+ 
+  if(reduceMotion || alreadyPlayed){
+    intro.classList.add('dm-fade-out', 'dm-hidden');
+    hero.classList.add('dm-visible');
+  } else {
+    lockScroll(); /* ДОДАНО: поки триває анімація, сторінка не скролиться і логотип лишається строго по центру екрана */
+
+    var dur = CONFIG.timing.introDurationMs + 'ms';
+    shellTop.style.animationDuration = dur;
+    shellBottom.style.animationDuration = dur;
+    cream.style.animationDuration = dur;
+    logo.style.animationDuration = dur;
+ 
+    var totalWait = CONFIG.timing.introDurationMs + CONFIG.timing.holdAfterLogoMs;
+    setTimeout(function(){
+      revealHero();
+      try{ sessionStorage.setItem('dmIntroPlayed', '1'); }catch(e){}
+    }, totalWait);
+  }
+ 
+})();
+</script>
+
+
+  <!-- Блок 3 -->
+
+<div id="dmgRoot" class="dmg-root">
+  <section class="dmg-section" id="dmgSection">
+    <div class="dmg-grain" aria-hidden="true"></div>
+    <div class="dmg-blob dmg-blob-1" aria-hidden="true"></div>
+    <div class="dmg-blob dmg-blob-2" aria-hidden="true"></div>
+
+    <div class="dmg-inner">
+      <div class="dmg-head">
+        <span class="dmg-badge" id="dmgBadge">
+          <svg class="dmg-badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L13.6 9.2L21 12L13.6 14.8L12 22L10.4 14.8L3 12L10.4 9.2L12 2Z" fill="currentColor"/>
+          </svg>
+          <span id="dmgBadgeText"></span>
+        </span>
+        <h2 class="dmg-title" id="dmgTitle"></h2>
+        <p class="dmg-subtitle" id="dmgSubtitle"></p>
+      </div>
+
+      <div class="dmg-grid" id="dmgGrid"></div>
+    </div>
+  </section>
+</div>
+
+  
+  
+  
+<style>
+  #dmgRoot{
+    --dmg-bg1:#f8efe6;
+    --dmg-bg2:#f0dfe0;
+    --dmg-shell:#e4a4b9;
+    --dmg-accent:#9c7a4e;
+    --dmg-text-dark:#332420;
+    --dmg-text-light:#7a675f;
+    --dmg-card-bg:#fffaf3;
+    --dmg-badge-text:#9c7a4e;
+
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    font-family:'Montserrat', Arial, sans-serif;
+    box-sizing:border-box;
+  }
+  #dmgRoot *{ box-sizing:border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;500;600&display=swap');
+
+  .dmg-section{
+    position:relative;
+    width:100%;
+    background: linear-gradient(160deg, var(--dmg-bg1) 0%, var(--dmg-bg2) 100%);
+    padding: clamp(70px,9vw,120px) clamp(20px,6vw,80px);
+  }
+
+  .dmg-grain{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    opacity:.05;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .dmg-blob{ position:absolute; z-index:0; border-radius:50%; filter: blur(80px); pointer-events:none; }
+  .dmg-blob-1{ width:clamp(220px,28vw,400px); height:clamp(220px,28vw,400px); top:-10%; left:-8%; background: var(--dmg-shell); opacity:.22; }
+  .dmg-blob-2{ width:clamp(180px,22vw,320px); height:clamp(180px,22vw,320px); bottom:-8%; right:-6%; background: var(--dmg-accent); opacity:.14; }
+
+  .dmg-inner{
+    position:relative;
+    z-index:2;
+    max-width:1180px;
+    margin:0 auto;
+  }
+
+  .dmg-head{
+    text-align:center;
+    max-width:640px;
+    margin:0 auto clamp(36px,5vw,56px);
+  }
+
+  .dmg-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: rgba(255,255,255,.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,.7);
+    color: var(--dmg-badge-text);
+    padding:9px 18px;
+    border-radius:30px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+    font-weight:600;
+    margin-bottom:20px;
+    box-shadow: 0 6px 16px rgba(51,36,32,.06);
+  }
+  .dmg-badge-icon{ width:13px; height:13px; color: var(--dmg-badge-text); flex:0 0 auto; }
+
+  .dmg-title{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(28px,4vw,44px);
+    line-height:1.16;
+    letter-spacing:-.4px;
+    color: var(--dmg-text-dark);
+    margin:0 0 16px;
+  }
+  .dmg-title em{ font-style:italic; font-weight:600; color:#a4506c; }
+
+  .dmg-subtitle{
+    font-size:clamp(14px,1.4vw,17px);
+    line-height:1.6;
+    color: var(--dmg-text-light);
+    margin:0;
+  }
+
+  .dmg-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(18px,2.4vw,30px);
+  }
+
+  .dmg-item{
+    display:block;
+    text-decoration:none !important;
+    cursor:pointer;
+  }
+
+  .dmg-card{
+    position:relative;
+    display:block;
+    width:100%;
+    max-width:220px;              /* ЗМІНЕНО: обмежили максимальний розмір фото */
+    margin:0 auto;
+    background: var(--dmg-card-bg);
+    border-radius: 38% 62% 60% 40% / 46% 42% 58% 54%;
+    overflow:hidden;
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 20px 40px rgba(51,36,32,.14);
+    transition: transform .4s cubic-bezier(.2,.8,.2,1), border-radius .5s ease, box-shadow .4s ease;
+  }
+  .dmg-item:hover .dmg-card{
+    transform: translateY(-6px);
+    border-radius: 42% 58% 55% 45% / 55% 45% 60% 40%;
+    box-shadow: 0 28px 52px rgba(51,36,32,.2);
+  }
+  .dmg-card img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .dmg-caption{
+    margin-top: 14px;
+    text-align:center;
+    font-size:13.5px;
+    line-height:1.5;
+    color: var(--dmg-text-dark);
+    font-weight:600;
+  }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ПЛАНШЕТ
+     ====================================================== */
+  @media (max-width: 900px){
+    .dmg-grid{ grid-template-columns: repeat(2, 1fr); }
+    .dmg-card{ max-width:180px; }
+  }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ТЕЛЕФОН
+     ====================================================== */
+  @media (max-width: 480px){
+    .dmg-section{ padding: 50px 16px 60px; }
+    .dmg-grid{ grid-template-columns: repeat(2, 1fr); gap:12px; }
+    .dmg-card{ max-width:130px; border-radius: 32% 68% 62% 38% / 40% 38% 62% 60%; }
+    .dmg-title{ font-size: 24px; }
+    .dmg-subtitle{ font-size:13px; }
+    .dmg-badge{ font-size:10px; padding:6px 12px; }
+    .dmg-caption{ font-size:12px; margin-top:10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dmg-card{ transition:none; }
+  }
+</style>
+
+<script>
+(function(){
+
+  /* ======================================================
+     CONFIG -- ТЕКСТИ, КОЛЬОРИ ТА ФОТО РОБІТ ТУТ
+     ====================================================== */
+  var CONFIG = {
+
+    colors: {
+      bgGradientStart : "#f8efe6", /* ЗМІНИТИ фон секції */
+      bgGradientEnd   : "#f0dfe0", /* ЗМІНИТИ фон секції */
+      shellColor      : "#e4a4b9", /* ЗМІНИТИ колір декоративної плями зліва */
+      accentColor     : "#9c7a4e", /* ЗМІНИТИ колір декоративної плями справа / бейджа */
+      textDark        : "#332420", /* ЗМІНИТИ колір заголовка */
+      textLight       : "#7a675f", /* ЗМІНИТИ колір підзаголовка */
+      badgeText       : "#9c7a4e"  /* ЗМІНИТИ колір тексту бейджа */
+    },
+
+    texts: {
+      badgeText : "Наші роботи",                                   /* ЗМІНИТИ текст бейджа */
+      titleHtml : "Кожен макарон -- <em>маленький</em> витвір",     /* ЗМІНИТИ заголовок секції */
+      subtitle  : "Кілька прикладів наших робіт -- від класичних смаків до святкових наборів на замовлення." /* ЗМІНИТИ підзаголовок */
+    },
+
+    /* Список робіт: для кожної картки встав своє посилання на фото (завантаж фото в Tilda або на ibb.co)
+       і за бажанням підпис, який з'явиться при наведенні (на телефоні -- завжди видно) */
+    items: [
+      { imageUrl: "https://i.ibb.co/xqW1kwRs/size-3-4-202607112211-1.jpg", alt: "Полуниця-мак", caption: "Полуниця-мак / Легка кислинка та хрумкий мак", href: "https://www.instagram.com/p/DTQGC8ngvmz/?igsh=MW54OGdhNXR2b3h1Mg==" },
+      { imageUrl: "https://i.ibb.co/k6vvD8gc/Remove-icon-from-top-202607112210.jpg", alt: "Макарон Снікерс", caption: "Макарон Снікерс / Шоколадний крем, солона карамель, арахіс", href: "https://www.instagram.com/reel/DTqGDMwAlvR/?igsh=Z3J2cTZ2N2w0cWx2" },
+      { imageUrl: "https://i.ibb.co/HTDcxdZR/Remove-icon-from-top-202607112211.jpg", alt: "Фісташка-малина", caption: "Фісташка-малина / Баланс солодкого й свіжого", href: "https://www.instagram.com/reel/DTQEorughCb/?igsh=dDZuanNrYnB0ZThs" },
+      { imageUrl: "https://i.ibb.co/fzrxpdPf/Remove-icon-from-top-202607112212.jpg", alt: "Шоколад та солона карамель", caption: "Шоколад та солона карамель", href: "https://www.instagram.com/p/DTOIuNwgJ_Q/?igsh=MWl3M2lkc285a2o4eg==" },
+      { imageUrl: "https://i.ibb.co/zTnDXf5t/size-3-4-202607120051.jpg", alt: "Торт із макарон", caption: "Торт із макарон", href: "https://www.instagram.com/p/DX1aIgKgBEV/?igsh=MXN5aTlycWZhZWE4dA==" },
+      { imageUrl: "https://i.ibb.co/pvLwXyfw/size-3-4-202607112210.jpg", alt: "Набір макаронів на День Валентина", caption: "Святковий набір", href: "https://www.instagram.com/p/DUYUnCZgB_n/?igsh=YWNzeXBzNG9ubHBv" }
+    ]
+  };
+
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+
+
+  var root = document.getElementById('dmgRoot');
+  if(!root) return;
+
+  var c = CONFIG.colors;
+  root.style.setProperty('--dmg-bg1', c.bgGradientStart);
+  root.style.setProperty('--dmg-bg2', c.bgGradientEnd);
+  root.style.setProperty('--dmg-shell', c.shellColor);
+  root.style.setProperty('--dmg-accent', c.accentColor);
+  root.style.setProperty('--dmg-text-dark', c.textDark);
+  root.style.setProperty('--dmg-text-light', c.textLight);
+  root.style.setProperty('--dmg-badge-text', c.badgeText);
+
+  var t = CONFIG.texts;
+  document.getElementById('dmgBadgeText').textContent = t.badgeText;
+  document.getElementById('dmgTitle').innerHTML = t.titleHtml;
+  document.getElementById('dmgSubtitle').textContent = t.subtitle;
+
+  var grid = document.getElementById('dmgGrid');
+  CONFIG.items.forEach(function(item){
+    if(!item.imageUrl) return; /* картка без вставленого фото просто не показується */
+
+    var wrap = document.createElement(item.href ? 'a' : 'div');
+    wrap.className = 'dmg-item';
+    if(item.href){
+      wrap.setAttribute('href', item.href);
+      wrap.setAttribute('target', '_blank');
+      wrap.setAttribute('rel', 'noopener');
+    }
+
+    var card = document.createElement('div');
+    card.className = 'dmg-card';
+
+    var img = document.createElement('img');
+    img.src = item.imageUrl;
+    img.alt = item.alt || '';
+    img.loading = 'lazy';
+    card.appendChild(img);
+    wrap.appendChild(card);
+
+    if(item.caption){
+      var cap = document.createElement('div');
+      cap.className = 'dmg-caption';       /* ЗМІНЕНО: підпис тепер звичайний текст під фото -- завжди видно, нічого не обрізається */
+      cap.textContent = item.caption;
+      wrap.appendChild(cap);
+    }
+
+    grid.appendChild(wrap);
+  });
+
+})();
+</script>
+
+
+  <!-- Блок 4 -->
+
+<div id="dmwRoot" class="dmw-root">
+  <div class="dmw-wave-wrap" aria-hidden="true">
+    <div class="dmw-wave-hairline"></div>
+    <svg class="dmw-wave dmw-wave-back" viewBox="0 0 2400 150" preserveAspectRatio="none">
+      <path d="M0,70 C300,140 600,0 1200,70 C1500,140 1800,0 2400,70 L2400,150 L0,150 Z"></path>
+    </svg>
+    <svg class="dmw-wave dmw-wave-front" viewBox="0 0 2400 150" preserveAspectRatio="none">
+      <path d="M0,90 C300,30 600,120 1200,90 C1500,30 1800,120 2400,90 L2400,150 L0,150 Z"></path>
+    </svg>
+  </div>
+</div>
+
+<style>
+  #dmwRoot{
+    --dmw-top:#f0dfe0;      /* ЗМІНИТИ: колір, з яким блок стикується зверху (низ галереї) */
+    --dmw-bottom:#f8efe6;   /* ЗМІНИТИ: колір, з яким блок стикується знизу (верх прайсу) */
+    --dmw-wave1:#d9b8bf;    /* ЗМІНИТИ: приглушений пудрово-рожевий (задній шар хвилі) */
+    --dmw-wave2:#e6d4cf;    /* ЗМІНИТИ: приглушений бежево-пиловий (передній шар хвилі) */
+    --dmw-hairline:#9c7a4e; /* ЗМІНИТИ: колір тонкої лінії-акценту */
+
+    position:relative;
+    width:100%;
+    height: clamp(80px,12vw,150px);
+    overflow:hidden;
+    line-height:0;
+    background: var(--dmw-top);
+  }
+  #dmwRoot::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: var(--dmw-bottom);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    z-index:0;
+  }
+
+  .dmw-wave-wrap{ position:absolute; inset:0; z-index:1; overflow:hidden; }
+  .dmw-wave-hairline{
+    position:absolute; top:6px; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--dmw-hairline), transparent);
+    opacity:.4; z-index:2;
+  }
+  .dmw-wave{ position:absolute; bottom:0; left:0; width:200%; height:100%; }
+  .dmw-wave path{ fill: var(--dmw-wave1); }
+  .dmw-wave-front path{ fill: var(--dmw-wave2); }
+  .dmw-wave-back{ animation: dmwMove 16s linear infinite; opacity:.9; }
+  .dmw-wave-front{ animation: dmwMove 10s linear infinite reverse; }
+  @keyframes dmwMove{ from{ transform: translateX(0); } to{ transform: translateX(-1200px); } }
+
+  @media (prefers-reduced-motion: reduce){
+    .dmw-wave-back, .dmw-wave-front{ animation:none !important; }
+  }
+</style>
+
+
+  <!-- Блок 5 -->
+
+<div id="dmpRoot" class="dmp-root">
+  <section class="dmp-section" id="dmpSection">
+    <div class="dmp-grain" aria-hidden="true"></div>
+    <div class="dmp-blob dmp-blob-1" aria-hidden="true"></div>
+    <div class="dmp-blob dmp-blob-2" aria-hidden="true"></div>
+
+    <div class="dmp-inner">
+      <div class="dmp-head">
+        <span class="dmp-badge" id="dmpBadge">
+          <svg class="dmp-badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L13.6 9.2L21 12L13.6 14.8L12 22L10.4 14.8L3 12L10.4 9.2L12 2Z" fill="currentColor"/>
+          </svg>
+          <span id="dmpBadgeText"></span>
+        </span>
+        <h2 class="dmp-title" id="dmpTitle"></h2>
+        <p class="dmp-subtitle" id="dmpSubtitle"></p>
+      </div>
+
+      <div class="dmp-grid" id="dmpGrid"></div>
+
+      <p class="dmp-note" id="dmpNote"></p>
+
+      <div class="dmp-cta">
+        <a class="dmp-btn" id="dmpBtn" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  #dmpRoot{
+    --dmp-bg1:#f8efe6;
+    --dmp-bg2:#f0dfe0;
+    --dmp-shell:#e4a4b9;
+    --dmp-accent:#9c7a4e;
+    --dmp-text-dark:#332420;
+    --dmp-text-light:#7a675f;
+    --dmp-card-bg:#fffaf3;
+    --dmp-card-border:rgba(51,36,32,.08);
+    --dmp-badge-text:#9c7a4e;
+    --dmp-highlight-bg:#332420;
+    --dmp-highlight-text:#fbf3ec;
+    --dmp-btn-bg:#332420;
+    --dmp-btn-text:#fbf3ec;
+
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    font-family:'Montserrat', Arial, sans-serif;
+    box-sizing:border-box;
+  }
+  #dmpRoot *{ box-sizing:border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;500;600;700&display=swap');
+
+  .dmp-section{
+    position:relative;
+    width:100%;
+    background: linear-gradient(160deg, var(--dmp-bg1) 0%, var(--dmp-bg2) 100%);
+    padding: clamp(70px,9vw,120px) clamp(20px,6vw,80px);
+  }
+
+  .dmp-grain{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    opacity:.05;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .dmp-blob{ position:absolute; z-index:0; border-radius:50%; filter: blur(80px); pointer-events:none; }
+  .dmp-blob-1{ width:clamp(220px,28vw,400px); height:clamp(220px,28vw,400px); top:-10%; right:-8%; background: var(--dmp-shell); opacity:.2; }
+  .dmp-blob-2{ width:clamp(180px,22vw,320px); height:clamp(180px,22vw,320px); bottom:-8%; left:-6%; background: var(--dmp-accent); opacity:.14; }
+
+  .dmp-inner{
+    position:relative;
+    z-index:2;
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  .dmp-head{
+    text-align:center;
+    max-width:620px;
+    margin:0 auto clamp(36px,5vw,52px);
+  }
+
+  .dmp-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: rgba(255,255,255,.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,.7);
+    color: var(--dmp-badge-text);
+    padding:9px 18px;
+    border-radius:30px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+    font-weight:600;
+    margin-bottom:20px;
+    box-shadow: 0 6px 16px rgba(51,36,32,.06);
+  }
+  .dmp-badge-icon{ width:13px; height:13px; color: var(--dmp-badge-text); flex:0 0 auto; }
+
+  .dmp-title{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(28px,4vw,44px);
+    line-height:1.16;
+    letter-spacing:-.4px;
+    color: var(--dmp-text-dark);
+    margin:0 0 16px;
+  }
+  .dmp-title em{ font-style:italic; font-weight:600; color:#a4506c; }
+
+  .dmp-subtitle{
+    font-size:clamp(14px,1.4vw,17px);
+    line-height:1.6;
+    color: var(--dmp-text-light);
+    margin:0;
+  }
+
+  .dmp-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(14px,1.8vw,20px);
+  }
+
+  .dmp-card{
+    position:relative;
+    background: var(--dmp-card-bg);
+    border:1px solid var(--dmp-card-border);
+    border-radius: 22px;
+    padding: clamp(22px,2.4vw,30px) 18px;
+    text-align:center;
+    box-shadow: 0 14px 30px rgba(51,36,32,.08);
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+  }
+  .dmp-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 38px rgba(51,36,32,.14);
+  }
+  .dmp-card.dmp-highlight{
+    background: var(--dmp-highlight-bg);
+    border-color: var(--dmp-highlight-bg);
+  }
+
+  .dmp-card-tag{
+    position:absolute;
+    top:-11px;
+    left:50%;
+    transform: translateX(-50%);
+    background: #a4506c;
+    color:#fbf3ec;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+    padding:5px 12px;
+    border-radius:20px;
+    white-space:nowrap;
+    box-shadow: 0 6px 14px rgba(51,36,32,.2);
+  }
+
+  .dmp-card-qty{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(22px,2.4vw,28px);
+    color: var(--dmp-text-dark);
+    line-height:1.2;
+  }
+  .dmp-card.dmp-highlight .dmp-card-qty{ color: var(--dmp-highlight-text); }
+
+  .dmp-card-unit{
+    font-size:12px;
+    color: var(--dmp-text-light);
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    margin-top:2px;
+  }
+  .dmp-card.dmp-highlight .dmp-card-unit{ color:#c9b8ae; }
+
+  .dmp-card-price{
+    font-size:clamp(17px,1.8vw,21px);
+    font-weight:700;
+    color:#a4506c;
+    margin-top:12px;
+  }
+  .dmp-card.dmp-highlight .dmp-card-price{ color:#e4a4b9; }
+
+  .dmp-card-per{
+    font-size:11.5px;
+    color: var(--dmp-text-light);
+    margin-top:4px;
+  }
+  .dmp-card.dmp-highlight .dmp-card-per{ color:#c9b8ae; }
+
+  .dmp-note{
+    text-align:center;
+    font-size:12.5px;
+    color: var(--dmp-text-light);
+    font-style:italic;
+    margin: clamp(24px,3vw,34px) auto 0;
+    max-width:560px;
+  }
+
+  .dmp-cta{
+    text-align:center;
+    margin-top: clamp(26px,3vw,36px);
+  }
+  .dmp-btn{
+    display:inline-flex;
+    align-items:center;
+    padding:15px 32px;
+    border-radius:40px;
+    background: var(--dmp-btn-bg);
+    color: var(--dmp-btn-text) !important;
+    font-size:14px;
+    font-weight:600;
+    text-decoration:none !important;
+    box-shadow: 0 14px 26px rgba(51,36,32,.22);
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+  }
+  .dmp-btn:hover{ transform: translateY(-3px); box-shadow: 0 18px 32px rgba(51,36,32,.3); }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ПЛАНШЕТ
+     ====================================================== */
+  @media (max-width: 900px){
+    .dmp-grid{ grid-template-columns: repeat(3, 1fr); gap:14px; }
+  }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ТЕЛЕФОН
+     ====================================================== */
+  @media (max-width: 480px){
+    .dmp-section{ padding: 50px 16px 60px; }
+    .dmp-grid{ grid-template-columns: repeat(2, 1fr); gap:10px; }
+    .dmp-card{ padding:18px 12px; border-radius:18px; }
+    .dmp-title{ font-size: 24px; }
+    .dmp-subtitle{ font-size:13px; }
+    .dmp-badge{ font-size:10px; padding:6px 12px; }
+    .dmp-card-qty{ font-size:19px; }
+    .dmp-card-price{ font-size:16px; }
+    .dmp-btn{ width:100%; justify-content:center; }
+  }
+</style>
+
+<script>
+(function(){
+
+  /* ======================================================
+     CONFIG -- ТЕКСТИ, ЦІНИ ТА КОЛЬОРИ ТУТ
+     ====================================================== */
+  var CONFIG = {
+
+    colors: {
+      bgGradientStart : "#f8efe6", /* ЗМІНИТИ фон секції */
+      bgGradientEnd   : "#f0dfe0", /* ЗМІНИТИ фон секції */
+      shellColor      : "#e4a4b9", /* ЗМІНИТИ колір декоративної плями */
+      accentColor     : "#9c7a4e", /* ЗМІНИТИ колір другої декоративної плями */
+      textDark        : "#332420", /* ЗМІНИТИ колір заголовка/кількості */
+      textLight       : "#7a675f", /* ЗМІНИТИ колір другорядного тексту */
+      badgeText       : "#9c7a4e", /* ЗМІНИТИ колір тексту бейджа */
+      highlightBg     : "#332420", /* ЗМІНИТИ фон виділеної (популярної) картки */
+      highlightText   : "#fbf3ec", /* ЗМІНИТИ колір тексту у виділеній картці */
+      btnBg           : "#332420", /* ЗМІНИТИ фон кнопки замовлення */
+      btnText         : "#fbf3ec"  /* ЗМІНИТИ колір тексту кнопки */
+    },
+
+    texts: {
+      badgeText : "Ціни",                                              /* ЗМІНИТИ текст бейджа */
+      titleHtml : "Скільки коштують <em>макарони</em>",                 /* ЗМІНИТИ заголовок */
+      subtitle  : "Ціни діють з 09.02.2026. Обирай зручну кількість.", /* ЗМІНИТИ підзаголовок */
+      btnText   : "Замовити в Instagram" /* ЗМІНИТИ текст кнопки */
+    },
+
+    btnUrl: "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp", /* ЗМІНИТИ посилання кнопки */
+
+    /* Ряди прайсу: qty -- кількість штук, price -- ціна в грн.
+       highlight: true -- виділити картку темним фоном (наприклад найпопулярніший набір)
+       tag -- напис-бейджик над карткою (можна лишити "") */
+    items: [
+      { qty: 4,  price: 260,  highlight:false, tag:"" },
+      { qty: 6,  price: 390,  highlight:false, tag:"" },
+      { qty: 8,  price: 520,  highlight:false, tag:"" },
+      { qty: 10, price: 650,  highlight:true,  tag:"Популярний вибір" },
+      { qty: 12, price: 780,  highlight:false, tag:"" },
+      { qty: 16, price: 1040, highlight:false, tag:"" }
+    ]
+  };
+
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+
+
+  var root = document.getElementById('dmpRoot');
+  if(!root) return;
+
+  var c = CONFIG.colors;
+  root.style.setProperty('--dmp-bg1', c.bgGradientStart);
+  root.style.setProperty('--dmp-bg2', c.bgGradientEnd);
+  root.style.setProperty('--dmp-shell', c.shellColor);
+  root.style.setProperty('--dmp-accent', c.accentColor);
+  root.style.setProperty('--dmp-text-dark', c.textDark);
+  root.style.setProperty('--dmp-text-light', c.textLight);
+  root.style.setProperty('--dmp-badge-text', c.badgeText);
+  root.style.setProperty('--dmp-highlight-bg', c.highlightBg);
+  root.style.setProperty('--dmp-highlight-text', c.highlightText);
+  root.style.setProperty('--dmp-btn-bg', c.btnBg);
+  root.style.setProperty('--dmp-btn-text', c.btnText);
+
+  var t = CONFIG.texts;
+  document.getElementById('dmpBadgeText').textContent = t.badgeText;
+  document.getElementById('dmpTitle').innerHTML = t.titleHtml;
+  document.getElementById('dmpSubtitle').textContent = t.subtitle;
+  document.getElementById('dmpNote').textContent = t.note;
+
+  var btn = document.getElementById('dmpBtn');
+  btn.textContent = t.btnText;
+  btn.setAttribute('href', CONFIG.btnUrl);
+
+  var grid = document.getElementById('dmpGrid');
+  CONFIG.items.forEach(function(item){
+    var card = document.createElement('div');
+    card.className = 'dmp-card' + (item.highlight ? ' dmp-highlight' : '');
+
+    if(item.tag){
+      var tag = document.createElement('div');
+      tag.className = 'dmp-card-tag';
+      tag.textContent = item.tag;
+      card.appendChild(tag);
+    }
+
+    var qty = document.createElement('div');
+    qty.className = 'dmp-card-qty';
+    qty.textContent = item.qty + ' шт';
+    card.appendChild(qty);
+
+    var price = document.createElement('div');
+    price.className = 'dmp-card-price';
+    price.textContent = item.price + ' грн';
+    card.appendChild(price);
+
+    var per = document.createElement('div');
+    per.className = 'dmp-card-per';
+    per.textContent = '~' + Math.round(item.price / item.qty) + ' грн / шт';
+    card.appendChild(per);
+
+    grid.appendChild(card);
+  });
+
+})();
+</script>
+
+
+  <!-- Блок 6 -->
+
+<div id="dmwRoot" class="dmw-root">
+  <div class="dmw-wave-wrap" aria-hidden="true">
+    <div class="dmw-wave-hairline"></div>
+    <svg class="dmw-wave dmw-wave-back" viewBox="0 0 2400 150" preserveAspectRatio="none">
+      <path d="M0,70 C300,140 600,0 1200,70 C1500,140 1800,0 2400,70 L2400,150 L0,150 Z"></path>
+    </svg>
+    <svg class="dmw-wave dmw-wave-front" viewBox="0 0 2400 150" preserveAspectRatio="none">
+      <path d="M0,90 C300,30 600,120 1200,90 C1500,30 1800,120 2400,90 L2400,150 L0,150 Z"></path>
+    </svg>
+  </div>
+</div>
+
+<style>
+  #dmwRoot{
+    --dmw-top:#f0dfe0;      /* ЗМІНИТИ: колір, з яким блок стикується зверху (низ галереї) */
+    --dmw-bottom:#f8efe6;   /* ЗМІНИТИ: колір, з яким блок стикується знизу (верх прайсу) */
+    --dmw-wave1:#d9b8bf;    /* ЗМІНИТИ: приглушений пудрово-рожевий (задній шар хвилі) */
+    --dmw-wave2:#e6d4cf;    /* ЗМІНИТИ: приглушений бежево-пиловий (передній шар хвилі) */
+    --dmw-hairline:#9c7a4e; /* ЗМІНИТИ: колір тонкої лінії-акценту */
+
+    position:relative;
+    width:100%;
+    height: clamp(80px,12vw,150px);
+    overflow:hidden;
+    line-height:0;
+    background: var(--dmw-top);
+  }
+  #dmwRoot::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: var(--dmw-bottom);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    z-index:0;
+  }
+
+  .dmw-wave-wrap{ position:absolute; inset:0; z-index:1; overflow:hidden; }
+  .dmw-wave-hairline{
+    position:absolute; top:6px; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--dmw-hairline), transparent);
+    opacity:.4; z-index:2;
+  }
+  .dmw-wave{ position:absolute; bottom:0; left:0; width:200%; height:100%; }
+  .dmw-wave path{ fill: var(--dmw-wave1); }
+  .dmw-wave-front path{ fill: var(--dmw-wave2); }
+  .dmw-wave-back{ animation: dmwMove 16s linear infinite; opacity:.9; }
+  .dmw-wave-front{ animation: dmwMove 10s linear infinite reverse; }
+  @keyframes dmwMove{ from{ transform: translateX(0); } to{ transform: translateX(-1200px); } }
+
+  @media (prefers-reduced-motion: reduce){
+    .dmw-wave-back, .dmw-wave-front{ animation:none !important; }
+  }
+</style>
+
+  <!-- Блок 7 -->
+
+<div id="dmrRoot" class="dmr-root">
+  <section class="dmr-section" id="dmrRew">
+    <div class="dmr-grain" aria-hidden="true"></div>
+
+    <div class="dmr-head">
+      <span class="dmr-badge" id="dmrBadge">
+        <svg class="dmr-badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L13.6 9.2L21 12L13.6 14.8L12 22L10.4 14.8L3 12L10.4 9.2L12 2Z" fill="currentColor"/>
+        </svg>
+        <span id="dmrBadgeText"></span>
+      </span>
+      <h2 class="dmr-title" id="dmrTitle"></h2>
+      <p class="dmr-subtitle" id="dmrSubtitle"></p>
+    </div>
+
+    <div class="dmr-carousel-wrap">
+      <button class="dmr-arrow dmr-arrow-left" id="dmrArrowLeft" aria-label="Назад">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="dmr-track" id="dmrTrack"></div>
+
+      <button class="dmr-arrow dmr-arrow-right" id="dmrArrowRight" aria-label="Далі">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+
+  <div class="dmr-lightbox" id="dmrLightbox">
+    <button class="dmr-lb-close" id="dmrLbClose" aria-label="Закрити">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button class="dmr-lb-nav dmr-lb-prev" id="dmrLbPrev" aria-label="Попереднє">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <img class="dmr-lb-img" id="dmrLbImg" src="" alt="" />
+    <div class="dmr-lb-video-wrap" id="dmrLbVideoWrap">
+      <iframe class="dmr-lb-video" id="dmrLbVideo" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <button class="dmr-lb-nav dmr-lb-next" id="dmrLbNext" aria-label="Наступне">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  #dmrRoot{
+    --dmr-bg1:#f8efe6;
+    --dmr-bg2:#f0dfe0;
+    --dmr-shell:#e4a4b9;
+    --dmr-accent:#9c7a4e;
+    --dmr-text-dark:#332420;
+    --dmr-text-light:#7a675f;
+    --dmr-card-bg:#fffaf3;
+    --dmr-badge-text:#9c7a4e;
+    --dmr-arrow-bg:#332420;
+    --dmr-arrow-text:#fbf3ec;
+
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    font-family:'Montserrat', Arial, sans-serif;
+    box-sizing:border-box;
+  }
+  #dmrRoot *{ box-sizing:border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;500;600&display=swap');
+
+  .dmr-section{
+    position:relative;
+    width:100%;
+    background: linear-gradient(160deg, var(--dmr-bg1) 0%, var(--dmr-bg2) 100%);
+    padding: clamp(70px,9vw,120px) 0 clamp(60px,8vw,100px);
+  }
+
+  .dmr-grain{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    opacity:.05;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .dmr-head{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    max-width:620px;
+    margin:0 auto clamp(36px,5vw,52px);
+    padding:0 clamp(20px,6vw,80px);
+  }
+
+  .dmr-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: rgba(255,255,255,.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,.7);
+    color: var(--dmr-badge-text);
+    padding:9px 18px;
+    border-radius:30px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+    font-weight:600;
+    margin-bottom:20px;
+    box-shadow: 0 6px 16px rgba(51,36,32,.06);
+  }
+  .dmr-badge-icon{ width:13px; height:13px; color: var(--dmr-badge-text); flex:0 0 auto; }
+
+  .dmr-title{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(28px,4vw,44px);
+    line-height:1.16;
+    letter-spacing:-.4px;
+    color: var(--dmr-text-dark);
+    margin:0 0 16px;
+  }
+  .dmr-title em{ font-style:italic; font-weight:600; color:#a4506c; }
+
+  .dmr-subtitle{
+    font-size:clamp(14px,1.4vw,17px);
+    line-height:1.6;
+    color: var(--dmr-text-light);
+    margin:0;
+  }
+
+  .dmr-carousel-wrap{
+    position:relative;
+    z-index:2;
+    max-width:1280px;
+    margin:0 auto;
+    padding:0 clamp(20px,6vw,80px);
+  }
+
+  .dmr-track{
+    display:flex;
+    gap: clamp(12px,1.6vw,18px);
+    overflow-x:auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior:smooth;
+    padding: 6px 2px 18px;
+    -ms-overflow-style:none;
+    scrollbar-width:none;
+  }
+  .dmr-track::-webkit-scrollbar{ display:none; }
+
+  .dmr-card{
+    position:relative;
+    flex:0 0 auto;
+    width: clamp(150px,15vw,190px);
+    aspect-ratio: 3 / 4;
+    border-radius:20px;
+    overflow:hidden;
+    background: var(--dmr-card-bg);
+    box-shadow: 0 16px 32px rgba(51,36,32,.14);
+    scroll-snap-align:start;
+    border:none;
+    padding:0;
+    display:block;
+    cursor:pointer;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+  }
+  .dmr-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 22px 42px rgba(51,36,32,.2);
+  }
+  .dmr-card img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .dmr-play{
+    position:absolute;
+    top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    width:44px; height:44px;
+    border-radius:50%;
+    background: rgba(51,36,32,.55);
+    backdrop-filter: blur(3px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+  }
+  .dmr-play svg{ width:16px; height:16px; margin-left:2px; }
+
+  .dmr-arrow{
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    width:46px; height:46px;
+    border-radius:50%;
+    border:none;
+    background: var(--dmr-arrow-bg);
+    color: var(--dmr-arrow-text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow: 0 12px 24px rgba(51,36,32,.22);
+    transition: transform .25s ease, box-shadow .25s ease;
+    z-index:3;
+  }
+  .dmr-arrow:hover{ transform: translateY(-50%) scale(1.08); }
+  .dmr-arrow svg{ width:18px; height:18px; }
+  .dmr-arrow-left{ left: clamp(-4px,1vw,10px); }
+  .dmr-arrow-right{ right: clamp(-4px,1vw,10px); }
+
+  /* ======================================================
+     ЛАЙТБОКС
+     ====================================================== */
+  .dmr-lightbox{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background: rgba(20,14,12,.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    visibility:hidden;
+    transition: opacity .3s ease, visibility 0s linear .3s;
+  }
+  .dmr-lightbox.dmr-lb-open{
+    opacity:1;
+    visibility:visible;
+    transition: opacity .3s ease, visibility 0s;
+  }
+  .dmr-lb-img{
+    max-width:min(88vw,420px);
+    max-height:86vh;
+    border-radius:16px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.4);
+    object-fit:contain;
+  }
+  .dmr-lb-video-wrap{
+    display:none;
+    width:min(88vw,420px);
+    aspect-ratio: 9/16;
+    max-height:86vh;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,.4);
+    background:#000;
+  }
+  .dmr-lb-video{
+    width:100%;
+    height:100%;
+    border:none;
+    display:block;
+  }
+  .dmr-lb-close{
+    position:absolute;
+    top: clamp(14px,3vw,28px);
+    right: clamp(14px,3vw,28px);
+    width:42px; height:42px;
+    border-radius:50%;
+    border:none;
+    background: rgba(255,255,255,.12);
+    color:#fbf3ec;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: background .25s ease;
+  }
+  .dmr-lb-close:hover{ background: rgba(255,255,255,.22); }
+  .dmr-lb-close svg{ width:18px; height:18px; }
+
+  .dmr-lb-nav{
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    width:48px; height:48px;
+    border-radius:50%;
+    border:none;
+    background: rgba(255,255,255,.12);
+    color:#fbf3ec;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: background .25s ease;
+  }
+  .dmr-lb-nav:hover{ background: rgba(255,255,255,.22); }
+  .dmr-lb-nav svg{ width:20px; height:20px; }
+  .dmr-lb-prev{ left: clamp(10px,3vw,40px); }
+  .dmr-lb-next{ right: clamp(10px,3vw,40px); }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ПЛАНШЕТ
+     ====================================================== */
+  @media (max-width: 900px){
+    .dmr-card{ width: clamp(130px,20vw,170px); }
+  }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ТЕЛЕФОН
+     ====================================================== */
+  @media (max-width: 480px){
+    .dmr-section{ padding: 50px 0 60px; }
+    .dmr-card{ width: 118px; border-radius:16px; }
+    .dmr-title{ font-size: 24px; }
+    .dmr-subtitle{ font-size:13px; }
+    .dmr-badge{ font-size:10px; padding:6px 12px; }
+    .dmr-arrow{ display:none; }
+    .dmr-carousel-wrap{ padding:0 16px; }
+    .dmr-lb-img{ max-width:92vw; border-radius:12px; }
+    .dmr-lb-video-wrap{ width:92vw; }
+    .dmr-lb-nav{ width:40px; height:40px; }
+    .dmr-lb-prev{ left:8px; }
+    .dmr-lb-next{ right:8px; }
+  }
+</style>
+
+<script>
+(function(){
+
+  /* ======================================================
+     CONFIG -- ТЕКСТИ, КОЛЬОРИ ТА ВІДГУКИ ТУТ
+     ====================================================== */
+  var CONFIG = {
+
+    colors: {
+      bgGradientStart : "#f8efe6",
+      bgGradientEnd   : "#f0dfe0",
+      textDark        : "#332420",
+      textLight       : "#7a675f",
+      badgeText       : "#9c7a4e",
+      arrowBg         : "#332420",
+      arrowText       : "#fbf3ec"
+    },
+
+    texts: {
+      badgeText : "Відгуки",
+      titleHtml : "Що кажуть <em>наші</em> клієнти",
+      subtitle  : "Реальні відгуки та історії з Instagram -- натисни на будь-яку картку, щоб переглянути у більшому розмірі."
+    },
+
+    /* type: "photo" або "video".
+       thumbUrl -- обкладинка, яку видно в стрічці (і в лайтбоксі для фото).
+       videoUrl -- ТІЛЬКИ для type:"video" -- посилання на YouTube (shorts/watch/youtu.be) -- відкривається у вбудованому плеєрі. */
+    items: [
+      { type:"video", thumbUrl:"https://i.ibb.co/nskysSwp/size-9-16-don-t-change-202607121234.jpg", videoUrl:"https://youtube.com/shorts/HDYjtczfcsM?feature=share" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/pjSg4zFW/size-9-16-don-t-change-202607121232-1.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/HfVL7WXL/size-9-16-don-t-change-202607121232.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/WmnmgGy/size-9-16-don-t-change-202607121230-1.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/KjjNsKvC/size-9-16-don-t-change-202607121230.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/4nRsPKMS/size-9-16-don-t-change-202607121229-1.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/xtPVy7Tq/size-9-16-don-t-change-202607121229.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/1t0qTZ08/size-9-16-don-t-change-202607121227-1.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/CptmjfdW/size-9-16-don-t-change-202607121227.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/zhXbq136/size-9-16-don-t-change-202607121226-1.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/Xr4ZyG6N/size-9-16-don-t-change-202607121226.jpg" },
+      { type:"video", thumbUrl:"", videoUrl:"" },
+      { type:"video", thumbUrl:"https://i.ibb.co/wZMRnGg1/size-9-16-don-t-change-202607121225-1.jpg", videoUrl:"https://youtube.com/shorts/TVMH_HdQozA?feature=share" },
+      { type:"video", thumbUrl:"https://i.ibb.co/GSPhqwk/size-9-16-don-t-change-202607121225.jpg", videoUrl:"https://youtube.com/shorts/_54XHCA9-W8?feature=share" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/DP1NbGCK/size-9-16-don-t-change-202607121224.jpg" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/9mbJvx81/size-9-16-don-t-change-202607121223.jpg" },
+      { type:"video", thumbUrl:"https://i.ibb.co/0N73ZZx/size-9-16-don-t-change-202607121222-1.jpg", videoUrl:"https://youtube.com/shorts/UWave6swxr0?feature=share" },
+      { type:"photo", thumbUrl:"https://i.ibb.co/Jj4FNMTq/size-9-16-don-t-change-202607121222.jpg" }
+    ]
+  };
+
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+
+
+  var root = document.getElementById('dmrRoot');
+  if(!root) return;
+
+  var c = CONFIG.colors;
+  root.style.setProperty('--dmr-bg1', c.bgGradientStart);
+  root.style.setProperty('--dmr-bg2', c.bgGradientEnd);
+  root.style.setProperty('--dmr-text-dark', c.textDark);
+  root.style.setProperty('--dmr-text-light', c.textLight);
+  root.style.setProperty('--dmr-badge-text', c.badgeText);
+  root.style.setProperty('--dmr-arrow-bg', c.arrowBg);
+  root.style.setProperty('--dmr-arrow-text', c.arrowText);
+
+  var t = CONFIG.texts;
+  document.getElementById('dmrBadgeText').textContent = t.badgeText;
+  document.getElementById('dmrTitle').innerHTML = t.titleHtml;
+  document.getElementById('dmrSubtitle').textContent = t.subtitle;
+
+  var PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11.2-7.2c.6-.4.6-1.4 0-1.8L8.6 3.9C7.9 3.5 7 4 7 4.8Z"/></svg>';
+
+  var items = CONFIG.items.filter(function(item){ return !!item.thumbUrl; });
+
+  var track = document.getElementById('dmrTrack');
+  items.forEach(function(item, index){
+    var card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'dmr-card';
+    card.setAttribute('data-index', index);
+
+    var img = document.createElement('img');
+    img.src = item.thumbUrl;
+    img.alt = '';
+    img.loading = 'lazy';
+    card.appendChild(img);
+
+    if(item.type === 'video'){
+      var play = document.createElement('span');
+      play.className = 'dmr-play';
+      play.innerHTML = PLAY_SVG;
+      card.appendChild(play);
+    }
+
+    card.addEventListener('click', function(){ openLightbox(index); });
+    track.appendChild(card);
+  });
+
+  var arrowLeft = document.getElementById('dmrArrowLeft');
+  var arrowRight = document.getElementById('dmrArrowRight');
+  function scrollByCard(dir){
+    var card = track.querySelector('.dmr-card');
+    var step = card ? (card.getBoundingClientRect().width + 16) * 3 : 400;
+    track.scrollBy({ left: dir * step, behavior:'smooth' });
+  }
+  arrowLeft.addEventListener('click', function(){ scrollByCard(-1); });
+  arrowRight.addEventListener('click', function(){ scrollByCard(1); });
+
+  /* ======================================================
+     ЛАЙТБОКС -- показ фото/відео на весь екран
+     ====================================================== */
+  var lightbox = document.getElementById('dmrLightbox');
+  var lbImg = document.getElementById('dmrLbImg');
+  var lbVideo = document.getElementById('dmrLbVideo');
+  var lbVideoWrap = document.getElementById('dmrLbVideoWrap');
+  var lbClose = document.getElementById('dmrLbClose');
+  var lbPrev = document.getElementById('dmrLbPrev');
+  var lbNext = document.getElementById('dmrLbNext');
+  var currentIndex = 0;
+
+  function toYouTubeEmbed(url){
+    if(!url) return '';
+    var id = '';
+    var shortsMatch = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/);
+    var watchMatch = url.match(/[?&]v=([a-zA-Z0-9_-]+)/);
+    var shortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+    if(shortsMatch) id = shortsMatch[1];
+    else if(watchMatch) id = watchMatch[1];
+    else if(shortMatch) id = shortMatch[1];
+    else return url; /* якщо це вже інший формат (напр. embed) -- залишаємо як є */
+    return 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1';
+  }
+
+  function renderLightboxItem(){
+    var item = items[currentIndex];
+    if(item.type === 'video' && item.videoUrl){
+      lbImg.style.display = 'none';
+      lbVideoWrap.style.display = 'block';
+      lbVideo.src = toYouTubeEmbed(item.videoUrl);
+    } else {
+      lbVideo.src = '';
+      lbVideoWrap.style.display = 'none';
+      lbImg.style.display = 'block';
+      lbImg.src = item.thumbUrl;
+    }
+  }
+
+  function openLightbox(index){
+    currentIndex = index;
+    renderLightboxItem();
+    lightbox.classList.add('dmr-lb-open');
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lbVideo.src = '';
+    lightbox.classList.remove('dmr-lb-open');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
+  function showRelative(dir){
+    lbVideo.src = '';
+    currentIndex = (currentIndex + dir + items.length) % items.length;
+    renderLightboxItem();
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', function(){ showRelative(-1); });
+  lbNext.addEventListener('click', function(){ showRelative(1); });
+  lightbox.addEventListener('click', function(e){
+    if(e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e){
+    if(!lightbox.classList.contains('dmr-lb-open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') showRelative(-1);
+    if(e.key === 'ArrowRight') showRelative(1);
+  });
+
+})();
+</script>
+
+
+  <!-- Блок 8 -->
+
+<div id="dmwRoot" class="dmw-root">
+  <div class="dmw-wave-wrap" aria-hidden="true">
+    <div class="dmw-wave-hairline"></div>
+    <svg class="dmw-wave dmw-wave-back" viewBox="0 0 2400 150" preserveAspectRatio="none">
+      <path d="M0,70 C300,140 600,0 1200,70 C1500,140 1800,0 2400,70 L2400,150 L0,150 Z"></path>
+    </svg>
+    <svg class="dmw-wave dmw-wave-front" viewBox="0 0 2400 150" preserveAspectRatio="none">
+      <path d="M0,90 C300,30 600,120 1200,90 C1500,30 1800,120 2400,90 L2400,150 L0,150 Z"></path>
+    </svg>
+  </div>
+</div>
+
+<style>
+  #dmwRoot{
+    --dmw-top:#f0dfe0;      /* ЗМІНИТИ: колір, з яким блок стикується зверху (низ галереї) */
+    --dmw-bottom:#f8efe6;   /* ЗМІНИТИ: колір, з яким блок стикується знизу (верх прайсу) */
+    --dmw-wave1:#d9b8bf;    /* ЗМІНИТИ: приглушений пудрово-рожевий (задній шар хвилі) */
+    --dmw-wave2:#e6d4cf;    /* ЗМІНИТИ: приглушений бежево-пиловий (передній шар хвилі) */
+    --dmw-hairline:#9c7a4e; /* ЗМІНИТИ: колір тонкої лінії-акценту */
+
+    position:relative;
+    width:100%;
+    height: clamp(80px,12vw,150px);
+    overflow:hidden;
+    line-height:0;
+    background: var(--dmw-top);
+  }
+  #dmwRoot::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: var(--dmw-bottom);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    z-index:0;
+  }
+
+  .dmw-wave-wrap{ position:absolute; inset:0; z-index:1; overflow:hidden; }
+  .dmw-wave-hairline{
+    position:absolute; top:6px; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--dmw-hairline), transparent);
+    opacity:.4; z-index:2;
+  }
+  .dmw-wave{ position:absolute; bottom:0; left:0; width:200%; height:100%; }
+  .dmw-wave path{ fill: var(--dmw-wave1); }
+  .dmw-wave-front path{ fill: var(--dmw-wave2); }
+  .dmw-wave-back{ animation: dmwMove 16s linear infinite; opacity:.9; }
+  .dmw-wave-front{ animation: dmwMove 10s linear infinite reverse; }
+  @keyframes dmwMove{ from{ transform: translateX(0); } to{ transform: translateX(-1200px); } }
+
+  @media (prefers-reduced-motion: reduce){
+    .dmw-wave-back, .dmw-wave-front{ animation:none !important; }
+  }
+</style>
+
+  <!-- Блок 9 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Bakery",
+  "name": "Dr. Macaron",
+  "image": "https://i.ibb.co/zHNn56Ph/Screenshot-2026-07-11-112651.png",
+  "url": "https://y.tilda.ws/",
+  "telephone": "+380980000000",
+  "priceRange": "260-1040 UAH",
+  "servesCuisine": "Macarons",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "мікрорайон Варшавський",
+    "addressLocality": "Київ",
+    "addressRegion": "Київська область",
+    "addressCountry": "UA"
+  },
+  "areaServed": { "@type": "City", "name": "Київ" },
+  "sameAs": [ "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp" ]
+}
+</script>
+
+<div id="dmfRoot" class="dmf-root">
+  <footer class="dmf-footer" id="dmfFooter">
+    <div class="dmf-grain" aria-hidden="true"></div>
+
+    <div class="dmf-inner">
+
+      <div class="dmf-top">
+
+        <div class="dmf-brand">
+          <a class="dmf-logo" id="dmfLogoLink" href="#">
+            <img class="dmf-logo-img" id="dmfLogoImg" src="" alt="" />
+            <span class="dmf-logo-text" id="dmfLogoText"></span>
+          </a>
+          <p class="dmf-tagline" id="dmfTagline"></p>
+          <span class="dmf-location" id="dmfLocation">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
+            <span id="dmfLocationText"></span>
+          </span>
+
+          <div class="dmf-social" id="dmfSocial"></div>
+        </div>
+
+        <div class="dmf-col" id="dmfNavCol">
+          <span class="dmf-col-title" id="dmfNavTitle"></span>
+          <nav class="dmf-links" id="dmfNav"></nav>
+        </div>
+
+        <div class="dmf-col" id="dmfContactCol">
+          <span class="dmf-col-title" id="dmfContactTitle"></span>
+          <div class="dmf-links" id="dmfContact"></div>
+        </div>
+
+        <div class="dmf-col dmf-col-cta">
+          <span class="dmf-col-title" id="dmfCtaTitle"></span>
+          <p class="dmf-cta-text" id="dmfCtaText"></p>
+          <a class="dmf-btn" id="dmfBtn" target="_blank" rel="noopener"></a>
+        </div>
+
+      </div>
+
+      <div class="dmf-bottom">
+        <span id="dmfCopyright"></span>
+        <span class="dmf-madeby" id="dmfMadeby"></span>
+      </div>
+
+    </div>
+  </footer>
+</div>
+
+<style>
+  #dmfRoot{
+    --dmf-bg:#2c201c;
+    --dmf-bg2:#332420;
+    --dmf-text:#fbf3ec;
+    --dmf-text-muted:#c9b8ae;
+    --dmf-accent:#e4a4b9;
+    --dmf-border:rgba(251,243,236,.12);
+    --dmf-btn-bg:#e4a4b9;
+    --dmf-btn-text:#332420;
+
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    font-family:'Montserrat', Arial, sans-serif;
+    box-sizing:border-box;
+  }
+  #dmfRoot *{ box-sizing:border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700&family=Montserrat:wght@400;500;600&display=swap');
+
+  .dmf-footer{
+    position:relative;
+    width:100%;
+    background: linear-gradient(160deg, var(--dmf-bg) 0%, var(--dmf-bg2) 100%);
+    padding: clamp(50px,6vw,80px) clamp(20px,6vw,80px) 26px;
+  }
+
+  .dmf-grain{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    opacity:.06;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .dmf-inner{
+    position:relative;
+    z-index:1;
+    max-width:1180px;
+    margin:0 auto;
+  }
+
+  .dmf-top{
+    display:grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    gap: clamp(30px,4vw,50px);
+    padding-bottom: clamp(36px,5vw,54px);
+    border-bottom:1px solid var(--dmf-border);
+  }
+
+  .dmf-logo{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none !important;
+  }
+  .dmf-logo-img{
+    display:block;
+    width:40px;
+    height:40px;
+    object-fit:contain;
+    border-radius:50%;
+  }
+  .dmf-logo-text{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:20px;
+    color: var(--dmf-text) !important;
+  }
+  .dmf-tagline{
+    font-size:14px;
+    line-height:1.65;
+    color: var(--dmf-text-muted);
+    margin: 16px 0 12px;
+    max-width:280px;
+  }
+
+  .dmf-location{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    color: var(--dmf-accent);
+    margin-bottom:20px;
+  }
+  .dmf-location svg{ width:14px; height:14px; flex:0 0 auto; }
+
+  .dmf-social{ display:flex; gap:10px; }
+  .dmf-social a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1px solid var(--dmf-border);
+    color: var(--dmf-text) !important;
+    transition: background .25s ease, transform .25s ease, border-color .25s ease;
+  }
+  .dmf-social a:hover{
+    background: var(--dmf-accent);
+    border-color: var(--dmf-accent);
+    color: var(--dmf-btn-text) !important;
+    transform: translateY(-3px);
+  }
+  .dmf-social svg{ width:16px; height:16px; }
+
+  .dmf-col-title{
+    display:block;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.3px;
+    font-weight:600;
+    color: var(--dmf-accent);
+    margin-bottom:18px;
+  }
+  .dmf-links{ display:flex; flex-direction:column; gap:12px; }
+  .dmf-links a, .dmf-links span{
+    font-size:14px;
+    color: var(--dmf-text-muted) !important;
+    text-decoration:none !important;
+    line-height:1.5;
+    transition: color .25s ease;
+  }
+  .dmf-links a:hover{ color: var(--dmf-text) !important; }
+
+  .dmf-cta-text{
+    font-size:14px;
+    line-height:1.6;
+    color: var(--dmf-text-muted);
+    margin:0 0 18px;
+  }
+  .dmf-btn{
+    display:inline-flex;
+    align-items:center;
+    padding:13px 26px;
+    border-radius:40px;
+    background: var(--dmf-btn-bg);
+    color: var(--dmf-btn-text) !important;
+    font-size:13px;
+    font-weight:600;
+    text-decoration:none !important;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+    white-space:nowrap;
+  }
+  .dmf-btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 22px rgba(0,0,0,.28); }
+
+  .dmf-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    padding-top:22px;
+    font-size:12.5px;
+    color: var(--dmf-text-muted);
+  }
+  .dmf-madeby{ opacity:.7; }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ПЛАНШЕТ
+     ====================================================== */
+  @media (max-width: 900px){
+    .dmf-top{
+      grid-template-columns: 1fr 1fr;
+      row-gap: 40px;
+    }
+    .dmf-brand{ grid-column: 1 / -1; }
+  }
+
+  /* ======================================================
+     АДАПТИВНІСТЬ: ТЕЛЕФОН
+     ====================================================== */
+  @media (max-width: 480px){
+    .dmf-footer{ padding: 44px 18px 22px; }
+    .dmf-top{
+      grid-template-columns: 1fr;
+      text-align:center;
+      row-gap: 32px;
+    }
+    .dmf-brand{ display:flex; flex-direction:column; align-items:center; }
+    .dmf-logo{ justify-content:center; }
+    .dmf-tagline{ max-width:none; }
+    .dmf-social{ justify-content:center; }
+    .dmf-links{ align-items:center; }
+    .dmf-col-cta{ align-items:center; display:flex; flex-direction:column; }
+    .dmf-bottom{ flex-direction:column; text-align:center; }
+  }
+</style>
+
+<script>
+(function(){
+
+  /* ======================================================
+     CONFIG -- ЛОГОТИП, ТЕКСТИ, МЕНЮ, КОНТАКТИ, КОЛЬОРИ ТУТ
+     ====================================================== */
+  var CONFIG = {
+
+    colors: {
+      bg          : "#2c201c", /* ЗМІНИТИ фон футера (початок градієнта) */
+      bg2         : "#332420", /* ЗМІНИТИ фон футера (кінець градієнта) */
+      text        : "#fbf3ec", /* ЗМІНИТИ основний колір тексту */
+      textMuted   : "#c9b8ae", /* ЗМІНИТИ колір другорядного тексту (посилання, теги) */
+      accent      : "#e4a4b9", /* ЗМІНИТИ акцентний колір (заголовки колонок, кнопка, hover іконок) */
+      btnBg       : "#e4a4b9", /* ЗМІНИТИ фон кнопки */
+      btnText     : "#332420"  /* ЗМІНИТИ колір тексту кнопки */
+    },
+
+    brand: {
+      logoImageUrl : "https://i.ibb.co/zHNn56Ph/Screenshot-2026-07-11-112651.png", /* ЗМІНИТИ -- посилання на логотип, або "" щоб лишити тільки текст */
+      logoAlt      : "Dr. Macaron",
+      logoText     : "Dr. Macaron",  /* ЗМІНИТИ текст лого */
+      logoUrl      : "#dmHero",       /* ЗМІНИТИ куди веде клік по лого */
+      tagline      : "Макарони ручної роботи невеликими партіями щодня. Свіжо, красиво, з душею.", /* ЗМІНИТИ короткий опис під лого */
+      location     : "Київ, мікрорайон Варшавський+" /* ЗМІНИТИ -- рядок з містом/районом під описом */
+    },
+
+    social: [
+      /* ЗМІНИТИ посилання, іконку можна лишити -- це Instagram і телефон, типові для кондитерської */
+      {
+        url: "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp",
+        label: "Instagram",
+        svg: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg>'
+      },
+      {
+        url: "tel:+380980000000",
+        label: "Телефон",
+        svg: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'
+      }
+    ],
+
+
+    navTitle: "Меню",
+    nav: [
+      /* ЗМІНИТИ пункти меню (якорі на розділи сторінки або зовнішні посилання) */
+      { text: "Ціни", url: "#dmpSection" },
+      { text: "Наші роботи", url: "#dmgSection" },
+      { text: "Відгуки", url: "#dmrRew" },
+ 
+    ],
+
+    contactTitle: "Контакти",
+    contact: [
+      /* ЗМІНИТИ -- кожен рядок або посилання (url заповнений), або просто текст (url порожній) */
+      { text: "+380 98 000 00 00", url: "tel:+380980000000" },
+      { text: "Київ, доставка по місту на таксі", url: "" },
+      { text: "Щодня 9:00 -- 20:00", url: "" }
+    ],
+
+    cta: {
+      title : "Замовлення",
+      text  : "Пишіть в Instagram -- відповідаємо швидко і допоможемо підібрати смак.",
+      btnText : "Написати в Instagram",
+      btnUrl  : "https://www.instagram.com/dr.macaron_varshavskiy?igsh=a2t6aW03am5xbDFp"
+    },
+
+    copyright : "© 2026 Dr. Macaron. Всі права захищено.", /* ЗМІНИТИ рік/текст */
+    madeby    : ""  /* ЗМІНИТИ, якщо хочеш підпис розробника, або лиши порожнім */
+  };
+
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+
+
+  var root = document.getElementById('dmfRoot');
+  if(!root) return;
+
+  var c = CONFIG.colors;
+  root.style.setProperty('--dmf-bg', c.bg);
+  root.style.setProperty('--dmf-bg2', c.bg2);
+  root.style.setProperty('--dmf-text', c.text);
+  root.style.setProperty('--dmf-text-muted', c.textMuted);
+  root.style.setProperty('--dmf-accent', c.accent);
+  root.style.setProperty('--dmf-btn-bg', c.btnBg);
+  root.style.setProperty('--dmf-btn-text', c.btnText);
+
+  var b = CONFIG.brand;
+  var logoImg = document.getElementById('dmfLogoImg');
+  if(b.logoImageUrl){
+    logoImg.src = b.logoImageUrl;
+    logoImg.alt = b.logoAlt || '';
+  } else {
+    logoImg.style.display = 'none';
+  }
+  document.getElementById('dmfLogoText').textContent = b.logoText || '';
+  document.getElementById('dmfLogoLink').setAttribute('href', b.logoUrl || '#');
+  document.getElementById('dmfTagline').textContent = b.tagline || '';
+  document.getElementById('dmfLocationText').textContent = b.location || '';
+
+  var socialWrap = document.getElementById('dmfSocial');
+  CONFIG.social.forEach(function(s){
+    var a = document.createElement('a');
+    a.href = s.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.setAttribute('aria-label', s.label || '');
+    a.innerHTML = s.svg;
+    socialWrap.appendChild(a);
+  });
+
+  document.getElementById('dmfNavTitle').textContent = CONFIG.navTitle;
+  var navWrap = document.getElementById('dmfNav');
+  CONFIG.nav.forEach(function(item){
+    var a = document.createElement('a');
+    a.textContent = item.text;
+    a.setAttribute('href', item.url);
+    navWrap.appendChild(a);
+  });
+
+  document.getElementById('dmfContactTitle').textContent = CONFIG.contactTitle;
+  var contactWrap = document.getElementById('dmfContact');
+  CONFIG.contact.forEach(function(item){
+    var el = item.url ? document.createElement('a') : document.createElement('span');
+    el.textContent = item.text;
+    if(item.url) el.setAttribute('href', item.url);
+    contactWrap.appendChild(el);
+  });
+
+  document.getElementById('dmfCtaTitle').textContent = CONFIG.cta.title;
+  document.getElementById('dmfCtaText').textContent = CONFIG.cta.text;
+  var ctaBtn = document.getElementById('dmfBtn');
+  ctaBtn.textContent = CONFIG.cta.btnText;
+  ctaBtn.setAttribute('href', CONFIG.cta.btnUrl);
+
+  document.getElementById('dmfCopyright').textContent = CONFIG.copyright;
+  document.getElementById('dmfMadeby').textContent = CONFIG.madeby || '';
+
+})();
+</script>
+
+
+  <!-- Блок 10 -->
+
+<div id="dmtRoot" class="dmt-root">
+  <button class="dmt-btn" id="dmtBtn" aria-label="Прокрутити вгору">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</div>
+
+<style>
+  #dmtRoot{
+    --dmt-bg:#332420;
+    --dmt-icon:#fbf3ec;
+    --dmt-hover-bg:#a4506c;
+
+    position:relative;
+    box-sizing:border-box;
+  }
+  #dmtRoot *{ box-sizing:border-box; }
+
+  .dmt-btn{
+    position:fixed;
+    right: clamp(16px,3vw,32px);
+    bottom: clamp(16px,3vw,32px);
+    z-index:800;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:none;
+    background: var(--dmt-bg);
+    color: var(--dmt-icon);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow: 0 14px 28px rgba(51,36,32,.28);
+    opacity:0;
+    visibility:hidden;
+    transform: translateY(10px);
+    transition: opacity .3s ease, transform .3s ease, visibility 0s linear .3s, background .25s ease;
+  }
+  .dmt-btn.dmt-visible{
+    opacity:1;
+    visibility:visible;
+    transform: translateY(0);
+    transition: opacity .3s ease, transform .3s ease, visibility 0s, background .25s ease;
+  }
+  .dmt-btn:hover{ background: var(--dmt-hover-bg); }
+  .dmt-btn svg{ width:20px; height:20px; }
+
+  @media (max-width: 480px){
+    .dmt-btn{ width:42px; height:42px; right:14px; bottom:14px; }
+    .dmt-btn svg{ width:17px; height:17px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dmt-btn{ transition:none; }
+  }
+</style>
+
+<script>
+(function(){
+
+  /* ======================================================
+     CONFIG
+     ====================================================== */
+  var CONFIG = {
+    colors: {
+      bg      : "#332420", /* ЗМІНИТИ фон кнопки */
+      icon    : "#fbf3ec", /* ЗМІНИТИ колір стрілки */
+      hoverBg : "#a4506c"  /* ЗМІНИТИ фон кнопки при наведенні */
+    },
+    showAfterPx : 400 /* ЗМІНИТИ -- після скількох пікселів прокрутки з'являється кнопка */
+  };
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+
+  var root = document.getElementById('dmtRoot');
+  if(!root) return;
+
+  var c = CONFIG.colors;
+  root.style.setProperty('--dmt-bg', c.bg);
+  root.style.setProperty('--dmt-icon', c.icon);
+  root.style.setProperty('--dmt-hover-bg', c.hoverBg);
+
+  var btn = document.getElementById('dmtBtn');
+
+  function toggleVisibility(){
+    if(window.scrollY > CONFIG.showAfterPx){ btn.classList.add('dmt-visible'); }
+    else{ btn.classList.remove('dmt-visible'); }
+  }
+  toggleVisibility();
+  window.addEventListener('scroll', toggleVisibility, { passive:true });
+
+  btn.addEventListener('click', function(){
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+
+})();
+</script>
+
+
+  <!-- Блок 11 -->
+
+<style>
+  html{
+    scroll-behavior:smooth; /* плавний скрол для сучасних браузерів (Chrome, Firefox, Edge, Android) */
+  }
+</style>
+
+<script>
+(function(){
+
+  /* ======================================================
+     CONFIG
+     ====================================================== */
+  var CONFIG = {
+    headerSelector : "#dmhHeader", /* ЗМІНИТИ, якщо id фіксованої шапки інший -- потрібен, щоб якір не ховався під нею */
+    fallbackOffset : 90            /* ЗМІНИТИ -- відступ (px), якщо шапки на сторінці немає взагалі */
+  };
+  /* ====================== КІНЕЦЬ CONFIG ====================== */
+
+  function getOffset(){
+    var header = document.querySelector(CONFIG.headerSelector);
+    return header ? header.offsetHeight + 12 : CONFIG.fallbackOffset;
+  }
+
+  /* Власний обробник кліків по якорях -- працює навіть там, де CSS scroll-behavior:smooth
+     не підтримується (Safari) або поламаний сторонніми скриптами Тільди */
+  document.addEventListener('click', function(e){
+    var link = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if(!link) return;
+
+    var id = link.getAttribute('href');
+    if(!id || id === '#' || id.length < 2) return;
+
+    var target = document.querySelector(id);
+    if(!target) return;
+
+    e.preventDefault();
+    var top = target.getBoundingClientRect().top + window.pageYOffset - getOffset();
+    window.scrollTo({ top: top, behavior:'smooth' });
+
+    if(history.pushState){ history.pushState(null, '', id); }
+  });
+
+})();
+</script>
+
+
+</body>
+</html>
